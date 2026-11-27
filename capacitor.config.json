@@ -1,0 +1,8 @@
+{
+  "appId": "com.aletse.faracut",
+  "appName": "FaraCut",
+  "webDir": "www",
+  "backgroundColor": "#07080f",
+  "android": { "backgroundColor": "#07080f" },
+  "plugins": { "SplashScreen": { "launchShowDuration": 600, "backgroundColor": "#07080f", "showSpinner": false } }
+}

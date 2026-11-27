@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">FaraCut</string>
+    <string name="title_activity_main">FaraCut</string>
+    <string name="package_name">com.aletse.faracut</string>
+    <string name="custom_url_scheme">com.aletse.faracut</string>
+</resources>
