@@ -49,14 +49,21 @@ const api = async (path, opt) => {
   const j = await r.json().catch(() => ({})); if (!r.ok) throw Object.assign(err(j.error || 'server'), { data: j }); return j;
 };
 const balance = () => api('/balance?user=' + userId());
-const generate = (image, prompt, aspect) => api('/generate', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ user: userId(), image, prompt, aspect }) });
+const run = (kind, payload) => api('/run', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...payload, kind, user: userId() }) });
 const job = id => api('/job/' + encodeURIComponent(id) + '?user=' + userId());
 const report = (jobId, reason) => api('/report', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ user: userId(), job: jobId, reason }) });
-async function download(url, name) {
+async function download(url, name, ext = 'mp4') {
   const r = await fetch(url); if (!r.ok) throw err('download');
-  const data = await toBase64(await r.blob());
-  const { uri } = await Filesystem.writeFile({ path: 'ia/' + name + '.mp4', data, directory: Directory.Data, recursive: true });
-  return { src: Capacitor.convertFileSrc(uri), path: 'ia/' + name + '.mp4' };
+  return saveLocal(await r.blob(), name, ext);
+}
+async function saveLocal(blob, name, ext) {
+  const path = 'ia/' + name + '.' + ext, data = await toBase64(blob);
+  const { uri } = await Filesystem.writeFile({ path, data, directory: Directory.Data, recursive: true });
+  return { src: Capacitor.convertFileSrc(uri), path };
+}
+async function shareLocal(path, title) {
+  const { uri } = await Filesystem.getUri({ path, directory: Directory.Data });
+  try { await Share.share({ title, files: [uri], dialogTitle: 'Guardar o compartir' }); } catch (e) { if (!/cancel/i.test(String(e && e.message))) throw e; }
 }
 async function removeClip(path) { try { await Filesystem.deleteFile({ path, directory: Directory.Data }); } catch (e) {} }
 
@@ -65,8 +72,8 @@ window.FC = {
   async saveVideo(blob, name) {
     const data = await toBase64(blob);
     const { uri } = await Filesystem.writeFile({ path: 'videos/' + name, data, directory: Directory.Cache, recursive: true });
-    try { await Share.share({ title: name, text: 'Vídeo creado con FaraCut', files: [uri], dialogTitle: 'Guardar o compartir el vídeo' }); }
+    try { await Share.share({ title: name, text: 'Creado con FaraCut', files: [uri], dialogTitle: 'Guardar o compartir el vídeo' }); }
     catch (e) { if (!/cancel/i.test(String(e && e.message))) throw e; }
   },
-  offerings, plan, buy, restore, manage, balance, generate, job, report, download, removeClip,
+  offerings, plan, buy, restore, manage, balance, run, job, report, download, saveLocal, shareLocal, removeClip,
 };

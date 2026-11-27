@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FaraCut</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* VOICE: estudio de IA futurista, preciso y con energía, como las herramientas de vídeo con IA más nuevas
    IDEA: una consola de producción: cristal oscuro, luz de neón y un render que "se enciende"
    PICTURE: el escenario animado brilla dentro de un marco luminoso, como la pantalla de un renderizador
-   COLOUR and TYPE: casi negro #07080f, cian eléctrico #22d3ee, violeta #8b5cf6, acento lima #a3ff5c; Sora + Inter
+   COLOUR and TYPE: casi negro #07080f, cian eléctrico #22d3ee, violeta #8b5cf6, acento lima #a3ff5c; "Space Grotesk" + Inter
    LAYOUT: carcasa de app móvil (máx. 520px), barra de pestañas flotante de cristal; misma paleta de noche siempre */
-:root{color-scheme:dark;--bg:#07080f;--panel:rgba(255,255,255,.045);--line:rgba(255,255,255,.09);--ink:#eef1ff;--mute:#8b93b5;
+:root{color-scheme:dark;--bg:#05060b;--panel:rgba(255,255,255,.045);--line:rgba(255,255,255,.09);--ink:#eef1ff;--mute:#8b93b5;
 --cy:#22d3ee;--vi:#8b5cf6;--lime:#a3ff5c;--grad:linear-gradient(120deg,#22d3ee,#8b5cf6 60%,#d946ef);--ok:#a3ff5c}
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:#03040a;color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;overflow-x:clip}
@@ -20,11 +20,11 @@ body{margin:0;background:#03040a;color:var(--ink);font:16px/1.5 Inter,system-ui,
 .app::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(#000,transparent 55%);pointer-events:none}
 header{padding:16px 18px 12px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5;background:rgba(7,8,15,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .logo{width:38px;height:38px;flex:none;filter:drop-shadow(0 0 10px rgba(34,211,238,.55))}
-header h1{font:800 22px/1 Sora,sans-serif;margin:0;flex:1;letter-spacing:-.02em}
+header h1{font:800 22px/1 "Space Grotesk",sans-serif;margin:0;flex:1;letter-spacing:-.02em}
 header h1 em{font-style:normal;font-size:11px;font-weight:800;vertical-align:middle;margin-left:6px;padding:3px 7px;border-radius:6px;background:var(--grad);color:#07080f}
 .cred{background:rgba(163,255,92,.1);color:var(--lime);border:1px solid rgba(163,255,92,.35);border-radius:99px;padding:6px 12px;font-weight:700;font-size:13px;white-space:nowrap;cursor:pointer;min-height:36px;box-shadow:0 0 14px -4px rgba(163,255,92,.6)}
 main{flex:1;padding:18px 16px 110px;position:relative}
-h2{font:800 30px/1.08 Sora,sans-serif;margin:4px 0 6px;text-wrap:balance;letter-spacing:-.03em;background:linear-gradient(90deg,#fff,#c9d2ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font:800 30px/1.08 "Space Grotesk",sans-serif;margin:4px 0 6px;text-wrap:balance;letter-spacing:-.03em;background:linear-gradient(90deg,#fff,#c9d2ff);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:var(--mute);margin:0 0 16px;font-size:15px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:14px;margin-bottom:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 label{display:block;font-weight:600;font-size:13px;color:var(--mute);margin:12px 0 5px}
@@ -57,7 +57,7 @@ button:disabled{opacity:.4;cursor:default;box-shadow:none}
 .chip[aria-pressed=true]{border-color:var(--cy);background:rgba(34,211,238,.12);box-shadow:0 0 14px -6px var(--cy)}
 .dot{width:26px;height:26px;border-radius:50%;flex:none;box-shadow:0 0 12px -2px currentColor,inset 0 -3px 6px rgba(0,0,0,.25)}
 .scene{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start}
-.num{width:34px;height:34px;border-radius:11px;background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.5);color:#d8ccff;font:800 15px Sora,sans-serif;display:grid;place-items:center}
+.num{width:34px;height:34px;border-radius:11px;background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.5);color:#d8ccff;font:800 15px "Space Grotesk",sans-serif;display:grid;place-items:center}
 .st{font-size:12px;font-weight:700;white-space:nowrap;padding:3px 9px;border-radius:99px;border:1px solid var(--line)}
 .st.ready{color:var(--lime);border-color:rgba(163,255,92,.4);background:rgba(163,255,92,.08)}
 .st.gen{color:var(--cy);border-color:rgba(34,211,238,.4);background:rgba(34,211,238,.08)}
@@ -72,7 +72,7 @@ nav button svg{width:22px;height:22px}
 nav button[aria-current=page]{color:var(--cy);background:rgba(34,211,238,.1);box-shadow:inset 0 0 0 1px rgba(34,211,238,.3)}
 nav button[aria-current=page] svg{filter:drop-shadow(0 0 6px var(--cy))}
 .plan{position:relative}.plan.best{border-color:transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent;box-shadow:0 0 40px -14px rgba(139,92,246,.9)}
-.price{font:800 30px/1 Sora,sans-serif;white-space:nowrap;letter-spacing:-.03em}
+.price{font:800 30px/1 "Space Grotesk",sans-serif;white-space:nowrap;letter-spacing:-.03em}
 .plan ul{margin:10px 0 14px;padding-left:20px;color:#c9cfe8}
 .plan li::marker{color:var(--cy)}
 .tag{display:inline-block;background:var(--grad);color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:800}
@@ -85,15 +85,15 @@ nav button[aria-current=page] svg{filter:drop-shadow(0 0 6px var(--cy))}
 @keyframes scan{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 @media(prefers-reduced-motion:reduce){.bob,.gen-on::after{animation:none}}
 .hero h2{font-size:34px}
-.sec{font:700 19px Sora,sans-serif;margin:26px 0 12px;letter-spacing:-.02em}
+.sec{font:700 19px "Space Grotesk",sans-serif;margin:26px 0 12px;letter-spacing:-.02em}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .tile{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:14px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;color:var(--ink);min-height:150px;font:inherit}
 .tile:hover{border-color:rgba(34,211,238,.45);box-shadow:0 0 24px -10px var(--cy)}
 .tile svg{width:56px;height:56px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.45));margin-bottom:4px}
-.tile b{font:700 15px/1.2 Sora,sans-serif}.tile span{font-size:13px;line-height:1.35;color:var(--mute)}
+.tile b{font:700 15px/1.2 "Space Grotesk",sans-serif}.tile span{font-size:13px;line-height:1.35;color:var(--mute)}
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .step{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--mute)}
-.step b{color:var(--ink);font:700 15px Sora,sans-serif;margin-top:6px}
+.step b{color:var(--ink);font:700 15px "Space Grotesk",sans-serif;margin-top:6px}
 .cont{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;align-items:center;width:100%;text-align:left;color:var(--ink);font:inherit;padding:10px}
 .thumb{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px var(--line),0 8px 18px -8px rgba(0,0,0,.7)}
 .thumb svg{display:block;width:100%;height:100%}
@@ -102,7 +102,7 @@ nav button[aria-current=page] svg{filter:drop-shadow(0 0 6px var(--cy))}
 .cgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
 .ccard{background:var(--panel);border:1px solid var(--line);border-radius:22px;overflow:hidden}
 .pt svg{display:block;width:100%;aspect-ratio:1}
-.cb{padding:10px 12px 12px}.cb b{font:700 16px Sora,sans-serif}.cb .mini{min-height:36px}
+.cb{padding:10px 12px 12px}.cb b{font:700 16px "Space Grotesk",sans-serif}.cb .mini{min-height:36px}
 .sm{min-height:36px;font-size:13px;margin-top:8px;width:100%}
 .ic{width:46px;padding:0}
 .places{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
@@ -166,13 +166,69 @@ figure.stage figcaption{position:absolute;left:10px;bottom:10px;z-index:3;backgr
 .link{background:none;border:0;color:inherit;text-decoration:underline;min-height:0;padding:0;font:inherit;font-weight:700}
 .aitag{position:absolute;right:5px;top:5px;background:var(--grad);color:#fff;font:800 10px Inter,sans-serif;border-radius:6px;padding:2px 6px}
 .scn video.bg{object-fit:cover}
+
+/* ---- rediseño: realista, moderno y futurista ---- */
+body{background:#020306}
+.app{background:radial-gradient(120% 50% at 100% 0,rgba(99,102,241,.22),transparent 60%),radial-gradient(80% 40% at 0 35%,rgba(34,211,238,.12),transparent 60%),var(--bg)}
+.app::before{background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:24px 24px}
+h2{letter-spacing:-.035em}
+header h1{font-weight:700;letter-spacing:-.03em}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));border-color:rgba(255,255,255,.08);border-radius:18px}
+.btn{background:linear-gradient(110deg,#22d3ee,#6366f1 55%,#a855f7);font-weight:700;letter-spacing:.01em}
+.hero2{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/5;margin:0 0 14px;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 60px -30px rgba(99,102,241,.8)}
+.slides{position:absolute;inset:0}
+.sl{position:absolute;inset:0;margin:0;opacity:0;animation:fade 18s infinite}
+.sl img{width:100%;height:100%;object-fit:cover;animation:kb 18s linear infinite;animation-delay:inherit}
+.sl figcaption{position:absolute;top:14px;right:14px;font:600 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);padding:5px 9px;border-radius:99px}
+@keyframes fade{0%{opacity:0}4%,30%{opacity:1}36%,100%{opacity:0}}
+@keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.14) translateY(-2%)}}
+.scan{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(2,3,6,.55) 62%,#05060b 100%),repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);pointer-events:none}
+.hcopy{position:absolute;left:18px;right:18px;bottom:18px}
+.hcopy h2{font-size:34px;margin:2px 0 6px;background:linear-gradient(90deg,#fff,#c7d2fe);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hcopy .sub{margin:0;color:#c3c8dc}
+.promptbar{display:flex;gap:8px;padding:6px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);box-shadow:0 0 0 4px rgba(99,102,241,.08),0 12px 40px -20px rgba(34,211,238,.8)}
+.promptbar input{border:0;background:none;min-height:46px}.promptbar input:focus{box-shadow:none}
+.promptbar .btn{padding:0 20px}
+.chips.quick{margin:10px 0 0}
+.feats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.feat{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:14px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);color:var(--ink);min-height:128px;font:inherit}
+.feat b{font:700 16px "Space Grotesk",sans-serif;margin-top:6px}.feat span{font-size:13px;color:var(--mute);line-height:1.35}
+.feat:hover{border-color:rgba(34,211,238,.5);box-shadow:0 0 30px -12px var(--cy)}
+.fi{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:#a5f3fc;background:radial-gradient(circle at 30% 20%,rgba(34,211,238,.35),rgba(99,102,241,.2));border:1px solid rgba(34,211,238,.35);flex:none}
+.feat span.fi{color:#a5f3fc}
+.fi svg{width:24px;height:24px}
+.steps .num{background:none;border:0;color:var(--cy);font:700 13px "Space Grotesk",sans-serif;width:auto;height:auto;letter-spacing:.1em}
+.legal{margin-top:16px;color:var(--mute)}
+.credbar{display:inline-flex;gap:6px;align-items:center;margin:0 0 12px;padding:6px 12px;border-radius:99px;border:1px solid rgba(163,255,92,.35);background:rgba(163,255,92,.08);color:#d9ffc2;font-size:13px;min-height:34px}
+.credbar span{font:700 15px "Space Grotesk",sans-serif;color:var(--lime)}
+.credbar.off{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:var(--mute);font-weight:500}
+.seg{margin-bottom:12px}
+.upl{display:inline-flex;align-items:center;min-height:42px;padding:0 14px;border-radius:12px;cursor:pointer;font-weight:700;font-size:14px;color:var(--ink);margin:0}
+.mini-th{width:54px;height:54px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.jobs{width:100%;color:var(--ink);font:inherit;text-align:left}
+.recbox{display:flex;gap:12px;align-items:center;padding:10px;border-radius:16px;background:rgba(0,0,0,.3);border:1px solid var(--line)}
+.recbtn{width:56px;height:56px;min-height:56px;border-radius:50%;padding:0;flex:none;background:radial-gradient(circle,#ff4d6d,#c9184a);box-shadow:0 0 0 4px rgba(255,77,109,.18),0 0 24px -4px #ff4d6d;display:grid;place-items:center}
+.recbtn i{width:18px;height:18px;border-radius:50%;background:#fff}
+.recbtn.on i{border-radius:4px}.recbtn.on{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(255,77,109,.08),0 0 30px -2px #ff4d6d}}
+audio{width:100%;margin-top:10px;height:40px}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:500;color:#d6dbee;font-size:13px;margin-top:14px}.check input{width:22px;height:22px;min-height:22px;flex:none;margin-top:2px}
+.gal{display:grid;grid-template-columns:1fr;gap:12px}
+.gi{border-radius:18px;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.gi img,.gi video{display:block;width:100%;max-height:420px;object-fit:contain;background:#000}
+.gi .aud{display:flex;gap:10px;align-items:center;padding:14px 14px 0}.gi .aud svg{width:30px;height:30px;color:var(--cy);flex:none}.gi .aud audio{margin:0}
+.gb{padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px}.gb b{font-size:14px;line-height:1.3}
+.gb .row button{margin:0;width:auto;min-height:36px}
+.subnav{display:flex;gap:6px;margin:0 0 10px}.subnav button{background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--mute);min-height:36px;font-size:13px;padding:0 12px}.subnav button[aria-current=page]{color:var(--cy);border-color:rgba(34,211,238,.5)}
+.costs{list-style:none;padding:0;margin:8px 0 0}.costs li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}.costs li:last-child{border:0}.costs b{color:var(--lime)}
+@media(prefers-reduced-motion:reduce){.sl,.sl img{animation:none}.sl:first-child{opacity:1}}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
 <svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".6" stop-color="#8b5cf6"/><stop offset="1" stop-color="#d946ef"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="url(#lg)"/><polygon points="15,11 30,20 15,29" fill="#fff"/><circle cx="31" cy="10" r="3.5" fill="#a3ff5c"/></svg>
-<h1>FaraCut<em>3D</em></h1>
+<h1>FaraCut<em>AI</em></h1>
 </header>
 <main id="view"></main>
 <nav id="nav" aria-label="Secciones"></nav>

@@ -5,10 +5,10 @@ const COLORS = { rosa: '#ff4f9a', azul: '#2f8cff', amarillo: '#ffd21f', verde: '
 const CNAME = { rosa: 'Rosa', azul: 'Azul', amarillo: 'Amarillo', verde: 'Verde', naranja: 'Naranja', morado: 'Morado', rojo: 'Rojo', turquesa: 'Turquesa' };
 const PLACES = { parque: 'Parque', circuito: 'Circuito', despegue: 'Base espacial', espacio: 'Espacio', playa: 'Playa', bosque: 'Bosque', granja: 'Granja', cocina: 'Cocina' };
 const SIZE = { perro: .8, gato: .85, pato: .8, cohete: 1.15, coche: .52 };
-const BAD = ['sangre', 'arma', 'pistola', 'cuchillo', 'muerte', 'matar', 'muerto', 'desnud', 'sexo', 'droga', 'alcohol', 'violencia', 'tabaco', 'cigarr', 'apuesta'];
+const BAD = ['desnud', 'porno', 'sexo', 'sexual', 'erótic', 'erotic', 'nsfw', 'nude', 'naked', 'porn', 'gore', 'decapit', 'mutila', 'tortura', 'suicid', 'violación', 'rape', 'terroris', 'nazi', 'loli'];
 const TITLE_SECS = 2.5;
-const ICONS = { plans: '<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>', home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', chars: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>', scenes: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 4v5M14 4v5"/>', play: '<rect x="3" y="4" width="18" height="16" rx="3"/><polygon points="10,9 16,12 10,15" fill="currentColor"/>' };
-const TABS = [['home', 'Inicio'], ['scenes', 'Escenas'], ['play', 'Episodio'], ['chars', 'Personajes'], ['plans', 'Planes']];
+const ICONS = { create: '<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2 2.2.8-2.2.8L19 21l-.8-2.2-2.2-.8 2.2-.8z"/>', voice: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', gallery: '<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/>', plans: '<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>', home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', chars: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>', scenes: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 4v5M14 4v5"/>', play: '<rect x="3" y="4" width="18" height="16" rx="3"/><polygon points="10,9 16,12 10,15" fill="currentColor"/>' };
+const TABS = [['home', 'Inicio'], ['create', 'Crear'], ['voice', 'Voz'], ['gallery', 'Galería'], ['plans', 'Planes']];
 
 const defaults = () => ({ tab: 'home', format: 'h', title: 'La gran aventura de Toby',
   chars: [{ id: 'c1', name: 'Toby', kind: 'perro', color: 'naranja', desc: 'Perrito juguetón' }, { id: 'c2', name: 'Rayo', kind: 'coche', color: 'rojo', desc: 'El coche más rápido del circuito' }, { id: 'c3', name: 'Estrella', kind: 'cohete', color: 'azul', desc: 'Cohete que viaja a los planetas' }],
@@ -42,9 +42,9 @@ const imgOf = c => `img/c-${c.kind}-${c.color}.webp`;
 const bgOf = (place, fmt) => `img/bg-${PLACES[place] ? place : 'parque'}-${fmt}.webp`;
 
 // ---------- planes y vídeo con IA ----------
-const PLANS = [['creador', 'Creador', '9,99 €', 40, ['Sin marca de agua', '40 s de vídeo con IA al mes (8 clips de 5 s)', 'Shorts y vídeos 16:9']],
-  ['pro', 'Pro', '19,99 €', 80, ['Todo lo de Creador', '80 s de vídeo con IA al mes (16 clips)', 'Ideal para publicar cada semana'], 1],
-  ['estudio', 'Estudio', '39,99 €', 160, ['Todo lo de Pro', '160 s de vídeo con IA al mes (32 clips)', 'Para canales que publican a diario']]];
+const PLANS = [['creador', 'Creador', '9,99 €', 40, ['Sin marca de agua', '40 créditos al mes', 'Imágenes, vídeos y voz con IA']],
+  ['pro', 'Pro', '24,99 €', 110, ['Todo lo de Creador', '110 créditos al mes', 'Vídeos largos y clonación de voz'], 1],
+  ['estudio', 'Estudio', '79,99 €', 350, ['Todo lo de Pro', '350 créditos al mes', 'Para creadores y agencias que publican a diario']]];
 const ME = { plan: 'gratis', bal: null, offs: {} };
 const paid = () => ME.plan !== 'gratis';
 async function refreshPlan() {
@@ -52,9 +52,9 @@ async function refreshPlan() {
   try { ME.plan = await FC.plan(); } catch (e) {}
   try { ME.offs = await FC.offerings(); } catch (e) {}
   if (FC.aiReady) try { ME.bal = await FC.balance(); } catch (e) {}
-  if (S.tab === 'plans' || S.tab === 'scenes') render();
+  if (['plans', 'scenes', 'create', 'voice', 'gallery'].includes(S.tab)) render();
 }
-const AI_MSG = { no_plan: 'Elige un plan para animar escenas con IA', no_credits: 'Has gastado tus segundos de IA de este mes', busy: 'Espera a que terminen los vídeos que se están generando', unsafe: 'El texto de la escena no es apto para niños', network: 'No hay conexión a Internet', not_configured: 'La IA todavía no está conectada en esta versión' };
+const AI_MSG = { no_plan: 'Elige un plan para usar la IA', no_credits: 'No te quedan créditos suficientes este mes', busy: 'Espera a que terminen los vídeos que se están generando', unsafe: 'El texto de la escena no es apto para niños', network: 'No hay conexión a Internet', not_configured: 'La IA todavía no está conectada en esta versión' };
 async function startFrame(sc, fmt) {
   const W = fmt === 'v' ? 720 : 1280, H = fmt === 'v' ? 1280 : 720, c = document.createElement('canvas'); c.width = W; c.height = H;
   const all = await prepare(fmt), it = all.find(x => x.sc.id === sc.id); if (!it) return null;
@@ -69,7 +69,7 @@ async function animateAI(id) {
   sc.aiBusy = true; render();
   try {
     const img = await startFrame(sc, S.format); if (!img) throw Object.assign(new Error(), { code: 'server' });
-    const r = await FC.generate(img, aiPrompt(sc), S.format === 'v' ? '9:16' : '16:9');
+    const r = await FC.run('video', { image: img, prompt: aiPrompt(sc), aspect: S.format === 'v' ? '9:16' : '16:9', duration: 5, style: 'animacion3d' });
     ME.bal = r; sc.aiJob = r.job; sc.aiFmt = S.format; save(); toast('Generando el vídeo con IA. Tarda unos minutos.'); pollAI(sc.id);
   } catch (e) { toast(AI_MSG[e.code] || 'No se pudo generar el vídeo'); if (e.code === 'no_credits' || e.code === 'no_plan') go('plans'); }
   sc.aiBusy = false; render();
@@ -162,12 +162,13 @@ ${sc.aiJob ? '' : `<button class="btn" style="width:100%;margin-top:8px;min-heig
   },
   plans() {
     const cur = ME.plan, bal = ME.bal, price = id => (ME.offs[id] && ME.offs[id].price) || PLANS.find(p => p[0] === id)[2];
-    return `<h2>Planes</h2><p class="sub">Los personajes y escenarios 3D son gratis para siempre. Con un plan quitas la marca de agua y animas escenas con IA.</p>
-${bal && cur !== 'gratis' ? `<div class="card"><div class="row"><b class="grow">Tu plan: ${esc(PLANS.find(p => p[0] === cur)?.[1] || cur)}</b><span class="mini">${bal.remaining} s de IA disponibles</span></div><div class="bar"><i style="width:${bal.allowance ? (bal.allowance - bal.remaining) / bal.allowance * 100 : 0}%"></i></div><div class="mini" style="margin-top:6px">Los segundos se renuevan el día 1 de cada mes.</div></div>` : ''}
-<div class="card plan"><div class="row" style="margin-top:6px"><b class="grow" style="font-size:20px">Gratis</b><span class="price">0 €</span></div><ul><li>Personajes y escenarios 3D ilimitados</li><li>Animación automática y exportar vídeo</li><li>Con marca de agua de FaraCut</li></ul>${cur === 'gratis' ? '<button class="btn2" style="width:100%" disabled>Plan actual</button>' : ''}</div>
+    return `<h2>Planes</h2><p class="sub">Crea imágenes, vídeos y voces con IA. El editor 3D y los efectos de voz son gratis para siempre.</p>
+${bal && cur !== 'gratis' ? `<div class="card"><div class="row"><b class="grow">Tu plan: ${esc(PLANS.find(p => p[0] === cur)?.[1] || cur)}</b><span class="mini">${bal.remaining} créditos disponibles</span></div><div class="bar"><i style="width:${bal.allowance ? (bal.allowance - bal.remaining) / bal.allowance * 100 : 0}%"></i></div><div class="mini" style="margin-top:6px">Los créditos se renuevan el día 1 de cada mes.</div></div>` : ''}
+<div class="card plan"><div class="row" style="margin-top:6px"><b class="grow" style="font-size:20px">Gratis</b><span class="price">0 €</span></div><ul><li>Editor 3D con personajes y escenarios</li><li>Efectos de voz (robot, eco, grave…)</li><li>Con marca de agua de FaraCut</li></ul>${cur === 'gratis' ? '<button class="btn2" style="width:100%" disabled>Plan actual</button>' : ''}</div>
 ${PLANS.map(p => `<div class="card plan ${p[5] ? 'best' : ''}">${p[5] ? '<span class="tag">Más elegido</span>' : ''}<div class="row" style="margin-top:6px"><b class="grow" style="font-size:20px">${p[1]}</b><span class="price">${esc(price(p[0]))}</span></div><div class="mini">al mes</div><ul>${p[4].map(x => `<li>${x}</li>`).join('')}</ul><button class="${p[5] ? 'btn' : 'btn2'}" style="width:100%" data-buy="${p[0]}" ${cur === p[0] ? 'disabled' : ''}>${cur === p[0] ? 'Plan actual' : 'Elegir ' + p[1]}</button></div>`).join('')}
 <div class="row"><button class="btn2 grow" id="restore">Restaurar compras</button>${cur !== 'gratis' ? '<button class="btn2 grow" id="manage">Gestionar suscripción</button>' : ''}</div>
-<p class="mini" style="margin-top:12px">Las suscripciones se renuevan cada mes y se pueden cancelar cuando quieras desde Google Play. Cada vídeo con IA dura 5 s; si falla, te devolvemos los segundos.${window.FC && FC.privacyUrl ? ` <a href="${esc(FC.privacyUrl)}" target="_blank" rel="noopener">Privacidad</a>` : ''}</p>`;
+<div class="card"><b>¿Cuánto gasta cada cosa?</b><ul class="costs"><li><span>1 imagen</span><b>1 crédito</b></li><li><span>1 segundo de vídeo</span><b>1 crédito</b></li><li><span>Clonar una voz</span><b>20 créditos</b></li><li><span>500 caracteres de voz</span><b>1 crédito</b></li><li><span>15 s de cambio de voz con IA</span><b>1 crédito</b></li><li><span>Efectos de voz y editor 3D</span><b>Gratis</b></li></ul></div>
+<p class="mini" style="margin-top:12px">Las suscripciones se renuevan cada mes y se pueden cancelar cuando quieras desde Google Play. Si un trabajo falla, te devolvemos los créditos.${window.FC && FC.privacyUrl ? ` <a href="${esc(FC.privacyUrl)}" target="_blank" rel="noopener">Privacidad</a>` : ''}</p>`;
   },
   play() {
     const tot = S.scenes.reduce((a, s) => a + s.dur, 0) + (S.scenes.length ? TITLE_SECS : 0);
@@ -346,8 +347,311 @@ document.addEventListener('submit', e => {
   }
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden && raf && !recording) stopPlay(); });
-function aiBar() { if (!window.FC || !FC.aiReady) return '<div class="warn" style="margin:0 0 12px">El vídeo con IA está disponible en la app de Android con un plan Creador, Pro o Estudio.</div>'; const b = ME.bal; return `<div class="card row" style="margin-bottom:12px"><span class="grow mini">${paid() && b ? `<b style="color:var(--lime)">${b.remaining} s</b> de vídeo con IA disponibles este mes` : 'Anima tus escenas con IA con un plan'}</span><button class="btn2 sm" style="width:auto;margin:0" data-tab="plans">Planes</button></div>`; }
+// ---------- Estudio de IA: imágenes, vídeos, vídeos largos y voz ----------
+const STY = [['realista', 'Realista'], ['cine', 'Cine'], ['futurista', 'Futurista'], ['anime', 'Anime'], ['animacion3d', 'Animación 3D'], ['publicidad', 'Publicidad'], ['infantil', 'Infantil']];
+const VOICES = ['Aria', 'Sarah', 'Laura', 'Charlotte', 'Alice', 'Matilda', 'Jessica', 'Lily', 'Roger', 'Charlie', 'George', 'Callum', 'Liam', 'Will', 'Eric', 'Chris', 'Brian', 'Daniel', 'Bill'];
+const FX = [['robot', 'Robot'], ['grave', 'Grave'], ['aguda', 'Aguda'], ['ardilla', 'Ardilla'], ['eco', 'Eco'], ['radio', 'Radio'], ['monstruo', 'Monstruo']];
+const ld = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
+const sv = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { toast('No se pudo guardar en este móvil'); } };
+const ST = { mode: 'video', vmode: 'clone', style: 'cine', aspect: '16:9', dur: 5, clip: 5, img: null, imgName: '', audio: null, audioSecs: 0, audioName: '', recording: null, consent: false, prompt: '', story: '', title: '', text: '', voice: 'Aria', myVoice: '' };
+let GAL = ld('faracut-gal', []), MYV = ld('faracut-voices', []), JOBS = ld('faracut-jobs', []), LONG = ld('faracut-long', null);
+const saveGal = () => sv('faracut-gal', GAL), saveJobs = () => sv('faracut-jobs', JOBS), saveLong = () => sv('faracut-long', LONG);
+const uidL = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const ERR = { ...AI_MSG, no_plan: 'Elige un plan para usar la IA', no_credits: 'No te quedan créditos suficientes este mes', consent: 'Confirma que es tu voz o que tienes permiso', bad_audio: 'El audio no es válido', too_long: 'El audio puede durar como mucho 5 minutos', unsafe: 'Ese contenido no está permitido', busy: 'Espera a que terminen tus trabajos en curso' };
+const needAI = () => { if (!window.FC || !FC.aiReady) { toast('La IA funciona en la app de Android'); return false; } if (!paid()) { go('plans'); toast(ERR.no_plan); return false; } return true; };
+const cr = n => `${n} crédito${n === 1 ? '' : 's'}`;
+const fileToData = f => new Promise((ok, ko) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = ko; r.readAsDataURL(f); });
+async function shrinkImg(dataUrl, max = 1536) { const i = await new Promise((ok, ko) => { const x = new Image(); x.onload = () => ok(x); x.onerror = ko; x.src = dataUrl; }); const k = Math.min(1, max / Math.max(i.naturalWidth, i.naturalHeight)), c = document.createElement('canvas'); c.width = Math.round(i.naturalWidth * k); c.height = Math.round(i.naturalHeight * k); c.getContext('2d').drawImage(i, 0, 0, c.width, c.height); return c.toDataURL('image/jpeg', .88); }
+
+// Lanza un trabajo y lo sigue hasta que termina
+async function runAI(kind, payload, meta) {
+  const r = await FC.run(kind, payload); ME.bal = r;
+  const j = { job: r.job, kind, meta, at: Date.now() }; JOBS.push(j); saveJobs(); render(); return waitJob(j);
+}
+async function waitJob(j) {
+  for (;;) {
+    let r; try { r = await FC.job(j.job); } catch (e) { if (e.code === 'not_found') { dropJob(j); return null; } await new Promise(ok => setTimeout(ok, 15000)); continue; }
+    if (r.status === 'done') { dropJob(j); refreshPlan(); return { ...r, job: j.job }; }
+    if (r.status === 'error') { dropJob(j); refreshPlan(); toast(r.reason === 'blocked' ? 'La IA no pudo crear ese contenido. Te devolvemos los créditos.' : 'Falló el trabajo. Te devolvemos los créditos.'); return null; }
+    j.queue = r.queue; const el = document.querySelector(`[data-jobst="${j.job}"]`); if (el) el.textContent = r.queue ? `En cola (${r.queue})…` : 'Generando…';
+    await new Promise(ok => setTimeout(ok, j.kind === 'image' || j.kind === 'tts' ? 3000 : 6000));
+  }
+}
+function dropJob(j) { JOBS = JOBS.filter(x => x.job !== j.job); saveJobs(); if (['create', 'voice', 'gallery'].includes(S.tab)) render(); }
+async function keep(res, meta) {
+  const ext = res.type === 'image' ? 'jpg' : res.type === 'video' ? 'mp4' : 'mp3', id = uidL();
+  const loc = await FC.download(res.url, id, ext);
+  const it = { id, type: res.type === 'voice' ? 'audio' : res.type, ...loc, job: meta.job, prompt: meta.prompt || '', title: meta.title || '', aspect: meta.aspect || '', ai: true, at: Date.now() };
+  GAL.unshift(it); saveGal(); return it;
+}
+async function doCreate() {
+  if (!needAI()) return;
+  const prompt = ST.prompt.trim(); if (!prompt) { toast('Describe lo que quieres crear'); return; }
+  if (unsafe(prompt)) { toast(ERR.unsafe); return; }
+  const meta = { prompt, aspect: ST.aspect };
+  try {
+    const p = ST.mode === 'image' ? runAI('image', { prompt, style: ST.style, aspect: ST.aspect }, meta) : runAI('video', { prompt, style: ST.style, aspect: ST.aspect, duration: ST.dur, image: ST.img || undefined }, meta);
+    toast(ST.mode === 'image' ? 'Creando imagen…' : 'Creando vídeo. Tarda unos minutos.'); go('gallery');
+    const r = await p; if (r) { await keep(r, { ...meta, job: r.job }); toast(ST.mode === 'image' ? '¡Imagen lista!' : '¡Vídeo listo!'); render(); }
+  } catch (e) { toast(ERR[e.code] || 'No se pudo crear'); if (e.code === 'no_plan' || e.code === 'no_credits') go('plans'); }
+}
+
+// Vídeo largo: una escena por línea; cada clip empieza con el último fotograma del anterior
+async function lastFrame(src) {
+  const v = document.createElement('video'); v.src = src; v.muted = true; v.playsInline = true; v.crossOrigin = 'anonymous';
+  await new Promise((ok, ko) => { v.onloadedmetadata = ok; v.onerror = ko; });
+  v.currentTime = Math.max(0, v.duration - .08); await new Promise(ok => { v.onseeked = ok; });
+  const c = document.createElement('canvas'); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0); return c.toDataURL('image/jpeg', .9);
+}
+async function doLong() {
+  if (!needAI()) return;
+  const lines = ST.story.split('\n').map(x => x.trim()).filter(Boolean);
+  if (lines.length < 2) { toast('Escribe al menos 2 escenas, una por línea'); return; }
+  if (lines.length > 12) { toast('Como máximo 12 escenas'); return; }
+  if (lines.some(unsafe)) { toast(ERR.unsafe); return; }
+  const cost = lines.length * ST.clip; if (ME.bal && ME.bal.remaining < cost) { toast(`Necesitas ${cr(cost)} y te quedan ${ME.bal.remaining}`); go('plans'); return; }
+  LONG = { id: uidL(), title: ST.title.trim() || 'Vídeo largo', lines, i: 0, parts: [], clip: ST.clip, style: ST.style, aspect: ST.aspect, first: ST.img || null };
+  saveLong(); go('gallery'); continueLong();
+}
+let longRunning = false;
+async function continueLong() {
+  if (!LONG || longRunning) return; longRunning = true;
+  try {
+    while (LONG && LONG.i < LONG.lines.length) {
+      const prev = LONG.parts[LONG.parts.length - 1], image = prev ? await lastFrame(prev.src).catch(() => null) : LONG.first;
+      const ctx = LONG.i ? 'Continúa la misma historia, mismos personajes y estilo. ' : '';
+      let r;
+      if (LONG.job) r = await waitJob({ job: LONG.job, kind: 'video' });
+      else { try { const q = FC.run('video', { prompt: ctx + LONG.lines[LONG.i], style: LONG.style, aspect: LONG.aspect, duration: LONG.clip, image: image || undefined }); const qq = await q; LONG.job = qq.job; ME.bal = qq; saveLong(); render(); r = await waitJob({ job: qq.job, kind: 'video' }); } catch (e) { toast(ERR[e.code] || 'No se pudo seguir con el vídeo largo'); break; } }
+      LONG.job = null;
+      if (!r) { toast(`La escena ${LONG.i + 1} falló. Puedes reintentarla desde la galería.`); saveLong(); break; }
+      const loc = await FC.download(r.url, LONG.id + '-' + LONG.i, 'mp4'); LONG.parts.push({ ...loc, job: r.job || '' }); LONG.i++; saveLong(); render();
+    }
+    if (LONG && LONG.i >= LONG.lines.length) {
+      GAL.unshift({ id: LONG.id, type: 'long', title: LONG.title, parts: LONG.parts, aspect: LONG.aspect, src: LONG.parts[0].src, ai: true, at: Date.now(), prompt: LONG.lines.join(' / ') });
+      saveGal(); LONG = null; saveLong(); toast('¡Vídeo largo listo! Expórtalo desde la galería.'); render();
+    }
+  } finally { longRunning = false; }
+}
+
+// Une varios clips (con sonido) en un solo vídeo
+async function exportClips(parts, aspect, title, stage) {
+  const mime = pickMime(); if (!mime) { toast('Este móvil no permite crear vídeos desde la app'); return; }
+  const W = aspect === '9:16' ? 720 : aspect === '1:1' ? 1080 : 1280, H = aspect === '9:16' ? 1280 : aspect === '1:1' ? 1080 : 720;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; const ctx = cv.getContext('2d');
+  try { if (!AC) { AC = new (window.AudioContext || window.webkitAudioContext)(); AC.dest = AC.createMediaStreamDestination(); } await AC.resume(); } catch (e) {}
+  const stream = new MediaStream([...cv.captureStream(30).getVideoTracks(), ...(AC ? AC.dest.stream.getAudioTracks() : [])]), chunks = [];
+  const rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8_000_000 }); rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  const ov = document.createElement('div'); ov.className = 'recov'; stage.appendChild(ov);
+  const done = new Promise(ok => rec.onstop = ok); rec.start(500);
+  for (let k = 0; k < parts.length; k++) {
+    ov.innerHTML = `Uniendo vídeo… ${k + 1}/${parts.length}<br><span class="mini">No salgas de la app</span>`;
+    const v = await getVid(parts[k].src); if (!v) continue; audioFor(v); v.currentTime = 0; await v.play().catch(() => {});
+    await new Promise(ok => { const step = () => { const s = Math.max(W / v.videoWidth, H / v.videoHeight), w = v.videoWidth * s, h = v.videoHeight * s; ctx.drawImage(v, (W - w) / 2, (H - h) / 2, w, h); if (v.ended || v.currentTime >= v.duration - .03) ok(); else requestAnimationFrame(step); }; step(); });
+    v.pause();
+  }
+  rec.stop(); await done; stream.getVideoTracks().forEach(t => t.stop()); ov.remove();
+  const blob = new Blob(chunks, { type: mime.split(';')[0] }), name = (title.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'video') + '.' + (mime.includes('mp4') ? 'mp4' : 'webm');
+  try { if (window.FC && FC.native) await FC.saveVideo(blob, name); else { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); } toast('Vídeo listo: ' + name); } catch (e) { toast('No se pudo guardar el vídeo'); }
+}
+
+// ---------- voz ----------
+async function startRec() {
+  try {
+    const st = await navigator.mediaDevices.getUserMedia({ audio: true }), mt = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm'].find(m => MediaRecorder.isTypeSupported(m)) || '';
+    const rec = new MediaRecorder(st, mt ? { mimeType: mt, audioBitsPerSecond: 48000 } : {}), ch = [], t0 = Date.now();
+    rec.ondataavailable = e => e.data.size && ch.push(e.data);
+    rec.onstop = async () => { st.getTracks().forEach(t => t.stop()); const b = new Blob(ch, { type: (mt || 'audio/webm').split(';')[0] }); ST.audio = await fileToData(b); ST.audioSecs = (Date.now() - t0) / 1000; ST.audioName = `Grabación de ${Math.round(ST.audioSecs)} s`; ST.recording = null; render(); };
+    rec.start(); ST.recording = { rec, t0 }; render();
+    const tick = () => { if (!ST.recording) return; const el = $('rect'); if (el) el.textContent = Math.floor((Date.now() - t0) / 1000) + ' s'; if (Date.now() - t0 > 180000) rec.stop(); else setTimeout(tick, 250); }; tick();
+  } catch (e) { toast('Permite el micrófono para grabar'); }
+}
+async function audioSecsOf(data) { try { const a = new Audio(data); await new Promise((ok, ko) => { a.onloadedmetadata = ok; a.onerror = ko; setTimeout(ok, 3000); }); return isFinite(a.duration) ? a.duration : 0; } catch (e) { return 0; } }
+function wavFrom(buf) {
+  const ch = buf.numberOfChannels, len = buf.length * ch * 2 + 44, ab = new ArrayBuffer(len), v = new DataView(ab), wr = (o, s) => [...s].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  wr(0, 'RIFF'); v.setUint32(4, len - 8, true); wr(8, 'WAVE'); wr(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, ch, true); v.setUint32(24, buf.sampleRate, true); v.setUint32(28, buf.sampleRate * ch * 2, true); v.setUint16(32, ch * 2, true); v.setUint16(34, 16, true); wr(36, 'data'); v.setUint32(40, len - 44, true);
+  let o = 44; const data = [...Array(ch)].map((_, i) => buf.getChannelData(i));
+  for (let i = 0; i < buf.length; i++) for (let c = 0; c < ch; c++) { const s = Math.max(-1, Math.min(1, data[c][i])); v.setInt16(o, s < 0 ? s * 0x8000 : s * 0x7fff, true); o += 2; }
+  return new Blob([ab], { type: 'audio/wav' });
+}
+async function applyFx(dataUrl, fx) {
+  const raw = await (await fetch(dataUrl)).arrayBuffer(), tmp = new (window.AudioContext || window.webkitAudioContext)(), src = await tmp.decodeAudioData(raw); tmp.close();
+  const rate = { grave: .78, aguda: 1.25, ardilla: 1.6, monstruo: .62 }[fx] || 1, len = Math.ceil(src.length / rate + (fx === 'eco' ? src.sampleRate * 1.2 : 0));
+  const oc = new OfflineAudioContext(src.numberOfChannels, len, src.sampleRate), s = oc.createBufferSource(); s.buffer = src; s.playbackRate.value = rate;
+  let last = s;
+  if (fx === 'robot') { const g = oc.createGain(); g.gain.value = 0; const o = oc.createOscillator(); o.frequency.value = 55; o.connect(g.gain); o.start(); s.connect(g); last = g; }
+  if (fx === 'radio') { const bp = oc.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1700; bp.Q.value = 1.2; const ws = oc.createWaveShaper(), c = new Float32Array(256); for (let i = 0; i < 256; i++) { const x = i / 128 - 1; c[i] = Math.tanh(x * 3); } ws.curve = c; s.connect(bp); bp.connect(ws); last = ws; }
+  if (fx === 'monstruo') { const lp = oc.createBiquadFilter(); lp.type = 'lowshelf'; lp.frequency.value = 300; lp.gain.value = 9; s.connect(lp); last = lp; }
+  if (fx === 'eco') { const d = oc.createDelay(1), fb = oc.createGain(); d.delayTime.value = .28; fb.gain.value = .42; s.connect(d); d.connect(fb); fb.connect(d); d.connect(oc.destination); }
+  last.connect(oc.destination); s.start(); return wavFrom(await oc.startRendering());
+}
+async function doVoice(action) {
+  if (action === 'fx') {
+    if (!ST.audio) { toast('Graba o sube un audio primero'); return; }
+    const fx = (sel('data-fx') || { dataset: { fx: 'robot' } }).dataset.fx;
+    try { const wav = await applyFx(ST.audio, fx), id = uidL(); const loc = window.FC && FC.native ? await FC.saveLocal(wav, id, 'wav') : { src: URL.createObjectURL(wav) }; GAL.unshift({ id, type: 'audio', ...loc, title: 'Efecto ' + FX.find(x => x[0] === fx)[1], ai: false, at: Date.now() }); saveGal(); toast('¡Audio listo en la galería!'); go('gallery'); } catch (e) { toast('No se pudo procesar el audio'); }
+    return;
+  }
+  if (!needAI()) return;
+  try {
+    if (action === 'clone') {
+      if (!ST.audio) { toast('Graba o sube al menos 10 segundos de tu voz'); return; }
+      if (ST.audioSecs && ST.audioSecs < 10) { toast('La muestra tiene que durar al menos 10 segundos'); return; }
+      if (!ST.consent) { toast(ERR.consent); return; }
+      const name = ($('vname') && $('vname').value.trim()) || 'Mi voz';
+      toast('Clonando tu voz…'); const r = await runAI('clone', { audio: ST.audio, consent: true }, { title: name });
+      if (r) { MYV.unshift({ id: uidL(), name, voiceId: r.voiceId, at: Date.now() }); sv('faracut-voices', MYV); if (r.url) await keep({ ...r, type: 'audio' }, { title: 'Muestra: ' + name, job: r.job }); ST.audio = null; ST.vmode = 'tts'; toast('¡Voz clonada! Ya puedes hacer que diga cualquier texto.'); render(); }
+    }
+    if (action === 'tts') {
+      const v = MYV.find(x => x.id === ST.myVoice) || MYV[0], text = ($('vtext') && $('vtext').value.trim()) || '';
+      if (!v) { toast('Primero clona una voz'); ST.vmode = 'clone'; render(); return; } if (!text) { toast('Escribe el texto'); return; }
+      toast('Generando la voz…'); const r = await runAI('tts', { text, voiceId: v.voiceId }, { title: v.name + ': ' + text.slice(0, 40) });
+      if (r) { await keep(r, { title: v.name + ': ' + text.slice(0, 40), job: r.job }); toast('¡Audio listo!'); go('gallery'); }
+    }
+    if (action === 'change') {
+      if (!ST.audio) { toast('Graba o sube un audio primero'); return; }
+      const secs = ST.audioSecs || await audioSecsOf(ST.audio); toast('Cambiando la voz…');
+      const r = await runAI('vchange', { audio: ST.audio, voice: ST.voice, seconds: secs }, { title: 'Voz de ' + ST.voice });
+      if (r) { await keep(r, { title: 'Voz de ' + ST.voice, job: r.job }); toast('¡Audio listo!'); go('gallery'); }
+    }
+  } catch (e) { toast(ERR[e.code] || 'No se pudo completar'); if (e.code === 'no_plan' || e.code === 'no_credits') go('plans'); }
+}
+
+// ---------- vistas nuevas ----------
+const HERO = [['hero-city', 'Ciudad de neón · vídeo 10 s'], ['hero-car', 'Superdeportivo · imagen'], ['hero-launch', 'Despegue · vídeo largo']];
+const FEATS = [['image', 'Imágenes', 'Fotos realistas, arte y publicidad', 'create:image'], ['video', 'Vídeos', 'De texto o de una foto, con sonido', 'create:video'], ['long', 'Vídeos largos', 'Historias de hasta 2 minutos', 'create:long'],
+  ['clone', 'Clonar voz', 'Tu voz diciendo cualquier texto', 'voice:clone'], ['change', 'Cambiar voz', 'Voces de IA y efectos', 'voice:change'], ['editor', 'Editor 3D', 'Personajes y escenarios animados', 'tab:scenes']];
+const FI = { image: '<rect x="4" y="6" width="24" height="20" rx="3"/><circle cx="12" cy="13" r="2.5"/><path d="M4 23l7-7 6 6 4-4 7 7"/>', video: '<rect x="4" y="8" width="18" height="16" rx="3"/><path d="M22 14l6-4v12l-6-4z"/>', long: '<rect x="3" y="9" width="8" height="14" rx="2"/><rect x="12" y="9" width="8" height="14" rx="2"/><rect x="21" y="9" width="8" height="14" rx="2"/>', clone: '<rect x="12" y="4" width="8" height="15" rx="4"/><path d="M7 15a9 9 0 0 0 18 0M16 24v4"/>', change: '<path d="M4 16h3l3-7 4 14 4-10 3 6 3-3h4"/>', editor: '<path d="M16 4l11 6v12l-11 6-11-6V10z"/><path d="M5 10l11 6 11-6M16 16v12"/>' };
+const ico = k => `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${FI[k]}</svg>`;
+const costNow = () => ST.mode === 'image' ? 1 : ST.mode === 'video' ? ST.dur : (ST.story.split('\n').filter(x => x.trim()).length || 0) * ST.clip;
+const seg = (attr, opts, cur) => `<div class="seg" role="group">${opts.map(([k, l]) => `<button type="button" data-${attr}="${k}" aria-pressed="${String(cur) === String(k)}">${l}</button>`).join('')}</div>`;
+const pending = kinds => JOBS.filter(j => kinds.includes(j.kind));
+const credBar = () => paid() && ME.bal ? `<div class="credbar"><span>${ME.bal.remaining}</span> créditos disponibles</div>` : `<button type="button" class="credbar off" data-tab="plans">Plan gratis · <b>Ver planes</b></button>`;
+
+Object.assign(views, {
+  home() {
+    return `<section class="hero2"><div class="slides">${HERO.map(([f, c], i) => `<figure class="sl" style="animation-delay:${i * 6}s"><img src="img/${f}.webp" alt=""><figcaption>${c}</figcaption></figure>`).join('')}</div><div class="scan"></div>
+<div class="hcopy"><p class="eyebrow">Estudio creativo con IA</p><h2>Imágenes, vídeos y voces con IA</h2><p class="sub">Describe tu idea y FaraCut la convierte en contenido realista listo para publicar.</p></div></section>
+<form class="promptbar" id="fquick"><input id="quick" placeholder="Un coche eléctrico cruzando una ciudad de neón de noche…" maxlength="400" autocomplete="off"><button class="btn" type="submit">Crear</button></form>
+<div class="chips quick">${[['image', 'Imagen'], ['video', 'Vídeo'], ['long', 'Vídeo largo']].map(([k, l]) => `<button type="button" class="chip" data-qmode="${k}" aria-pressed="${ST.mode === k}">${l}</button>`).join('')}</div>
+<h3 class="sec">Todo en una app</h3>
+<div class="feats">${FEATS.map(f => `<button type="button" class="feat" data-go="${f[3]}"><span class="fi">${ico(f[0])}</span><b>${f[1]}</b><span>${f[2]}</span></button>`).join('')}</div>
+<h3 class="sec">Así funciona</h3>
+<div class="steps">${[['01', 'Describe', 'lo que imaginas'], ['02', 'Elige', 'estilo y formato'], ['03', 'Publica', 'en tus redes']].map(s => `<div class="step"><span class="num">${s[0]}</span><b>${s[1]}</b><span>${s[2]}</span></div>`).join('')}</div>
+<div class="card legal mini">El contenido generado con IA se marca como tal. No se permite crear contenido sexual, violento o que suplante a personas reales.</div>`;
+  },
+  create() {
+    const m = ST.mode, busy = pending(['image', 'video']).length || (LONG ? 1 : 0);
+    return `<h2>Crear</h2>${credBar()}
+${seg('cmode', [['image', 'Imagen'], ['video', 'Vídeo'], ['long', 'Vídeo largo']], m)}
+<form class="card" id="fcreate">
+${m === 'long' ? `<label for="ltitle">Título</label><input id="ltitle" maxlength="60" value="${esc(ST.title)}" placeholder="Ej.: Viaje a Marte">
+<label for="story">Historia: una escena por línea (2 a 12)</label><textarea id="story" rows="7" placeholder="Un cohete despega de noche entre humo y fuego.&#10;El cohete atraviesa las nubes hacia el espacio.&#10;Vista de la Tierra desde la ventana de la nave.&#10;La nave aterriza suavemente en Marte.">${esc(ST.story)}</textarea>
+<p class="mini">Cada escena continúa desde el último fotograma de la anterior para que la historia se vea seguida.</p>` :
+`<label for="prompt">Describe ${m === 'image' ? 'la imagen' : 'el vídeo'}</label><textarea id="prompt" rows="4" maxlength="800" placeholder="${m === 'image' ? 'Retrato realista de una astronauta en una estación espacial, luz cálida' : 'Un dron sobrevuela la costa de Mallorca al atardecer, plano cinematográfico'}">${esc(ST.prompt)}</textarea>`}
+${m !== 'image' ? `<label>${m === 'long' ? 'Imagen inicial (opcional)' : 'Partir de una foto (opcional)'}</label><div class="row"><label class="btn2 upl" for="cimg">${ST.img ? 'Cambiar foto' : 'Subir foto'}</label><input id="cimg" type="file" accept="image/*" hidden>${ST.img ? `<img class="mini-th" src="${ST.img}" alt=""><button type="button" class="btn2 ic" data-noimg="1" aria-label="Quitar foto">✕</button>` : '<span class="mini">Sin foto: se crea desde el texto</span>'}</div>${ST.img ? '<p class="mini">Usa solo fotos tuyas o con permiso. No se permite animar a personas sin su consentimiento.</p>' : ''}` : ''}
+<label>Estilo</label><div class="chips">${STY.map(([k, l]) => `<button type="button" class="chip" data-sty="${k}" aria-pressed="${ST.style === k}">${l}</button>`).join('')}</div>
+<label>Formato</label>${seg('asp', [['16:9', '16:9'], ['9:16', '9:16'], ['1:1', '1:1']], ST.aspect)}
+${m === 'video' ? `<label>Duración</label>${seg('vdur', [[5, '5 s'], [10, '10 s'], [15, '15 s']], ST.dur)}` : ''}
+${m === 'long' ? `<label>Duración de cada escena</label>${seg('clip', [[5, '5 s'], [10, '10 s']], ST.clip)}` : ''}
+<div style="height:14px"></div><button class="btn" type="submit" style="width:100%" ${m === 'long' && LONG ? 'disabled' : ''}>${m === 'image' ? 'Crear imagen' : m === 'video' ? 'Crear vídeo' : LONG ? 'Ya hay un vídeo largo en marcha' : 'Crear vídeo largo'} · <span id="costl">${cr(costNow())}</span></button>
+</form>
+${busy ? `<button type="button" class="card row jobs" data-tab="gallery"><span class="spin"></span><span class="grow">Tienes trabajos en marcha</span><b>Ver galería</b></button>` : ''}
+<div class="card row"><span class="fi">${ico('editor')}</span><div class="grow"><b>Editor 3D</b><div class="mini">Monta episodios con personajes y escenarios 3D. Gratis.</div></div><button class="btn2 sm" style="width:auto;margin:0" data-tab="scenes">Abrir</button></div>`;
+  },
+  voice() {
+    const m = ST.vmode, rec = ST.recording, aud = ST.audio;
+    const recBox = `<div class="recbox">${rec ? `<button type="button" class="recbtn on" data-recstop="1" aria-label="Parar"><i></i></button><div><b>Grabando…</b><div class="mini" id="rect">0 s</div></div>` : `<button type="button" class="recbtn" data-rec="1" aria-label="Grabar"><i></i></button><div class="grow"><b>${aud ? esc(ST.audioName) : 'Graba tu voz'}</b><div class="mini">${aud ? 'Listo. Puedes volver a grabar.' : 'O sube un audio'}</div></div><label class="btn2 sm upl" for="vfile" style="width:auto;margin:0">Subir</label><input id="vfile" type="file" accept="audio/*" hidden>`}</div>${aud && !rec ? `<audio controls src="${aud}"></audio>` : ''}`;
+    return `<h2>Voz</h2>${credBar()}
+${seg('vmode', [['clone', 'Clonar voz'], ['tts', 'Texto a voz'], ['change', 'Cambiar voz']], m)}
+<div class="card">
+${m === 'clone' ? `<p class="sub" style="margin:0 0 10px">Graba entre 10 y 60 segundos hablando con naturalidad, sin ruido de fondo. Cuesta ${cr(20)}.</p>${recBox}
+<label for="vname">Nombre de la voz</label><input id="vname" maxlength="30" placeholder="Ej.: Mi voz">
+<label class="check"><input type="checkbox" id="consent" ${ST.consent ? 'checked' : ''}><span>Es mi propia voz, o tengo permiso por escrito de la persona. Sé que clonar la voz de otra persona sin permiso es ilegal.</span></label>
+<button class="btn" type="button" data-vdo="clone" style="width:100%;margin-top:12px">Clonar voz · ${cr(20)}</button>` : ''}
+${m === 'tts' ? (MYV.length ? `<label>Voz</label><div class="chips">${MYV.map((v, i) => `<button type="button" class="chip" data-myv="${v.id}" aria-pressed="${(ST.myVoice || MYV[0].id) === v.id}">${esc(v.name)}</button>`).join('')}</div>
+<label for="vtext">Texto</label><textarea id="vtext" rows="5" maxlength="5000" placeholder="Escribe lo que quieres que diga tu voz…"></textarea><p class="mini">1 crédito por cada 500 caracteres.</p>
+<button class="btn" type="button" data-vdo="tts" style="width:100%;margin-top:8px">Generar audio</button>` : `<p class="sub" style="margin:0 0 10px">Primero clona una voz para que diga cualquier texto.</p><button class="btn" type="button" data-vmode="clone" style="width:100%">Clonar una voz</button>`) : ''}
+${m === 'change' ? `<p class="sub" style="margin:0 0 10px">Convierte una grabación en otra voz con IA, o aplica efectos gratis.</p>${recBox}
+<label>Efectos gratis</label><div class="chips">${FX.map(([k, l], i) => `<button type="button" class="chip" data-fx="${k}" aria-pressed="${i === 0}">${l}</button>`).join('')}</div>
+<button class="btn2" type="button" data-vdo="fx" style="width:100%;margin-top:10px">Aplicar efecto · gratis</button>
+<label>Voz de IA</label><div class="chips">${VOICES.map(v => `<button type="button" class="chip" data-aiv="${v}" aria-pressed="${ST.voice === v}">${v}</button>`).join('')}</div>
+<button class="btn" type="button" data-vdo="change" style="width:100%;margin-top:12px">Cambiar a la voz de ${esc(ST.voice)} · 1 crédito / 15 s</button>` : ''}
+</div>
+${MYV.length && m !== 'tts' ? `<div class="card"><b>Tus voces</b><div class="mini" style="margin-top:4px">${MYV.map(v => esc(v.name)).join(' · ')}</div></div>` : ''}`;
+  },
+  gallery() {
+    const jobs = pending(['image', 'video', 'clone', 'tts', 'vchange']);
+    const longBox = LONG ? `<div class="card"><div class="row"><span class="spin"></span><b class="grow">${esc(LONG.title)}</b><span class="mini">${LONG.i}/${LONG.lines.length} escenas</span></div><div class="bar"><i style="width:${LONG.i / LONG.lines.length * 100}%"></i></div><div class="row" style="margin-top:10px"><button class="btn2 grow" data-longgo="1">Continuar</button><button class="btn2" data-longcancel="1">Cancelar</button></div></div>` : '';
+    return `<h2>Galería</h2>${longBox}
+${jobs.map(j => `<div class="card row"><span class="spin"></span><span class="grow"><b>${{ image: 'Imagen', video: 'Vídeo', clone: 'Clonación de voz', tts: 'Texto a voz', vchange: 'Cambio de voz' }[j.kind]}</b><br><span class="mini" data-jobst="${j.job}">Generando…</span></span></div>`).join('')}
+${!GAL.length && !jobs.length && !LONG ? '<div class="empty">Aquí aparecerá todo lo que crees.</div>' : ''}
+<div class="gal">${GAL.map(it => `<div class="gi ${it.type}">
+${it.type === 'image' ? `<img src="${it.src}" alt="">` : it.type === 'audio' ? `<div class="aud">${ico('clone')}<audio controls src="${it.src}"></audio></div>` : `<video src="${it.src}" controls playsinline preload="metadata"></video>`}
+<div class="gb"><b>${esc(it.title || it.prompt || ({ image: 'Imagen', video: 'Vídeo', long: 'Vídeo largo', audio: 'Audio' }[it.type]))}</b>${it.type === 'long' ? `<span class="mini">${it.parts.length} escenas</span>` : ''}
+<div class="row">${it.type === 'long' ? `<button class="btn sm" data-gexp="${it.id}">Exportar</button>` : `<button class="btn2 sm" data-gshare="${it.id}">Guardar</button>`}${it.type === 'image' ? `<button class="btn2 sm" data-ganim="${it.id}">Animar</button>` : ''}<button class="btn2 sm" data-gdel="${it.id}">Borrar</button>${it.ai ? `<button class="link sm" data-grep="${it.id}">Reportar</button>` : ''}</div></div></div>`).join('')}</div>`;
+  },
+});
+const EDITOR_NAV = () => `<div class="subnav">${[['scenes', 'Escenas'], ['play', 'Episodio'], ['chars', 'Personajes']].map(([k, l]) => `<button type="button" data-tab="${k}" ${S.tab === k ? 'aria-current="page"' : ''}>${l}</button>`).join('')}</div>`;
+['scenes', 'play', 'chars'].forEach(k => { const f = views[k]; views[k] = () => `<p class="eyebrow">Editor 3D</p>` + EDITOR_NAV() + f(); });
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+  if (d.go && /^(create|voice):/.test(d.go)) { const [k, v] = d.go.split(':'); if (k === 'create') ST.mode = v; else ST.vmode = v; go(k); e.stopImmediatePropagation(); return; }
+  if (d.qmode) { ST.mode = d.qmode; pressOne(b, 'data-qmode'); return; }
+  if (d.cmode) { ST.mode = d.cmode; render(); return; }
+  if (d.vmode) { ST.vmode = d.vmode; render(); return; }
+  if (d.sty) { ST.style = d.sty; pressOne(b, 'data-sty'); return; }
+  if (d.asp) { ST.aspect = d.asp; pressOne(b, 'data-asp'); return; }
+  if (d.vdur) { ST.dur = +d.vdur; pressOne(b, 'data-vdur'); const c = $('costl'); if (c) c.textContent = cr(costNow()); return; }
+  if (d.clip) { ST.clip = +d.clip; pressOne(b, 'data-clip'); const c = $('costl'); if (c) c.textContent = cr(costNow()); return; }
+  if (d.noimg) { ST.img = null; render(); return; }
+  if (d.myv) { ST.myVoice = d.myv; pressOne(b, 'data-myv'); return; }
+  if (d.aiv) { ST.voice = d.aiv; pressOne(b, 'data-aiv'); const x = document.querySelector('[data-vdo="change"]'); if (x) x.textContent = `Cambiar a la voz de ${d.aiv} · 1 crédito / 15 s`; return; }
+  if (d.fx) { pressOne(b, 'data-fx'); return; }
+  if (d.rec) { startRec(); return; }
+  if (d.recstop) { if (ST.recording) ST.recording.rec.stop(); return; }
+  if (d.vdo) { doVoice(d.vdo); return; }
+  if (d.longgo) { continueLong(); return; }
+  if (d.longcancel) { LONG = null; saveLong(); render(); return; }
+  const it = GAL.find(x => x.id === (d.gshare || d.gdel || d.grep || d.ganim || d.gexp));
+  if (d.gshare && it) { if (window.FC && FC.native && it.path) FC.shareLocal(it.path, it.title || 'FaraCut').catch(() => toast('No se pudo compartir')); else { const a = document.createElement('a'); a.href = it.src; a.download = it.id; a.click(); } return; }
+  if (d.gdel && it) { if (b.dataset.armed) { (it.parts || [it]).forEach(p => p.path && window.FC && FC.removeClip(p.path)); GAL = GAL.filter(x => x !== it); saveGal(); render(); } else { b.dataset.armed = 1; b.textContent = '¿Seguro?'; setTimeout(() => { if (b.isConnected) { b.textContent = 'Borrar'; delete b.dataset.armed; } }, 3000); } return; }
+  if (d.grep && it) { if (window.FC && FC.native) FC.report(it.job || (it.parts && it.parts[0].job) || it.id, 'Reportado desde la galería').then(() => toast('Gracias. Revisaremos este contenido.'), () => toast('No se pudo enviar')); return; }
+  if (d.ganim && it) { (async () => { try { const r = await fetch(it.src), blob = await r.blob(); ST.img = await shrinkImg(await fileToData(blob)); } catch (e) { ST.img = it.src; } ST.mode = 'video'; ST.prompt = it.prompt || ''; go('create'); })(); return; }
+  if (d.gexp && it) { exportClips(it.parts, it.aspect, it.title, b.closest('.gi')); return; }
+}, true);
+document.addEventListener('input', e => {
+  const id = e.target.id;
+  if (id === 'prompt') ST.prompt = e.target.value; if (id === 'story') { ST.story = e.target.value; const c = $('costl'); if (c) c.textContent = cr(costNow()); } if (id === 'ltitle') ST.title = e.target.value;
+  if (id === 'consent') ST.consent = e.target.checked;
+});
+document.addEventListener('change', async e => {
+  const id = e.target.id, f = e.target.files && e.target.files[0]; if (!f) return;
+  if (id === 'cimg') { try { ST.img = await shrinkImg(await fileToData(f)); render(); } catch (er) { toast('No se pudo leer la foto'); } }
+  if (id === 'vfile') { if (f.size > 6_000_000) { toast('El audio es demasiado grande (máx. 6 MB)'); return; } ST.audio = await fileToData(f); ST.audioSecs = await audioSecsOf(ST.audio); ST.audioName = f.name; render(); }
+  if (id === 'consent') ST.consent = e.target.checked;
+});
+document.addEventListener('submit', e => {
+  if (e.target.id === 'fcreate') { e.preventDefault(); e.stopImmediatePropagation(); if (ST.mode === 'long') doLong(); else doCreate(); }
+  if (e.target.id === 'fquick') { e.preventDefault(); e.stopImmediatePropagation(); const q = $('quick').value.trim(); if (ST.mode === 'long') ST.story = q; else ST.prompt = q; go('create'); }
+}, true);
+
+// reanudar trabajos pendientes al abrir la app
+function resumeAll() {
+  if (!window.FC || !FC.aiReady) return;
+  JOBS.slice().forEach(j => waitJob(j).then(async r => {
+    if (!r) return;
+    if (j.kind === 'clone') { MYV.unshift({ id: uidL(), name: (j.meta && j.meta.title) || 'Mi voz', voiceId: r.voiceId, at: Date.now() }); sv('faracut-voices', MYV); }
+    else await keep(r, { ...(j.meta || {}), job: r.job });
+    render();
+  }));
+  if (LONG) continueLong();
+}
+
+function aiBar() { if (!window.FC || !FC.aiReady) return '<div class="warn" style="margin:0 0 12px">Animar escenas con IA está disponible en la app de Android con un plan Creador, Pro o Estudio.</div>'; const b = ME.bal; return `<div class="card row" style="margin-bottom:12px"><span class="grow mini">${paid() && b ? `<b style="color:var(--lime)">${b.remaining} créditos</b> disponibles · animar una escena gasta 5` : 'Anima tus escenas con IA con un plan'}</span><button class="btn2 sm" style="width:auto;margin:0" data-tab="plans">Planes</button></div>`; }
 render();
 refreshPlan();
+resumeAll();
 S.scenes.forEach(sc => { if (sc.aiJob && window.FC && FC.aiReady) pollAI(sc.id); });
 })();

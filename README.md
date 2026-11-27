@@ -1,15 +1,15 @@
 # FaraCut
 
-Crea dibujos animados con personajes y escenarios 3D, anímalos con IA y exporta el vídeo para YouTube.
+Estudio creativo con IA: imágenes, vídeos, vídeos largos, clonación de voz, cambio de voz y un editor 3D gratuito.
 
 - `web/index.html` y `web/app.js` → la app.
-- `web/img/` → personajes 3D (perrito, gatito, patito, cohete y coche de carreras en 8 colores) y 8 escenarios 3D en horizontal y vertical.
-- `src/native.js` → guardar y compartir vídeos, planes de pago (RevenueCat) y vídeo con IA.
-- `server/` → servidor de vídeo con IA (Cloudflare Workers + fal.ai, modelo Wan 3.0 a 720p con sonido).
+- `web/img/` → imágenes de la portada y personajes y escenarios del editor 3D.
+- `src/native.js` → guardar y compartir, planes de pago (RevenueCat) y llamadas al servidor de IA.
+- `server/` → servidor de IA (Cloudflare Workers + fal.ai): imágenes FLUX.2 Pro, vídeo Wan 3.0 (720p con sonido), clonación y texto a voz MiniMax y cambio de voz ElevenLabs.
 - `CONFIG.json` → dirección del servidor, clave de RevenueCat y web de privacidad.
-- `android/` → proyecto Android (Capacitor). Paquete: `com.aletse.faracut`.
-- `docs/` → política de privacidad (se publica en GitHub Pages).
-- `play-store/` → icono, gráfico destacado y 4 capturas para la ficha de Google Play.
+- `android/` → proyecto Android (Capacitor). Paquete: `com.aletse.faracut`. Pide micrófono solo al grabar.
+- `docs/` → política de privacidad (GitHub Pages).
+- `play-store/` → icono, gráfico destacado y 4 capturas.
 
 **Crear la app:** Actions › *Crear app Android* › Run workflow. Descarga de *Artifacts* el `.aab` (Google Play) y el `.apk` (para instalarla en tu móvil).
 
@@ -17,13 +17,15 @@ Secretos necesarios (Settings › Secrets and variables › Actions): `ANDROID_K
 
 **Publicar el servidor de IA:** Actions › *Publicar servidor IA* › Run workflow. Secretos: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `FAL_KEY`, `REVENUECAT_SECRET`.
 
-## Planes
+## Planes y créditos
 
-| Plan | Precio | Vídeo con IA al mes | Coste máximo de IA | Beneficio mínimo |
+| Plan | Precio | Créditos al mes | Coste máximo de IA | Beneficio mínimo |
 |---|---|---|---|---|
-| Gratis | 0 € | — (solo 3D, con marca de agua) | 0 € | — |
-| Creador | 9,99 € | 40 s (8 clips) | 4,00 € | 2,95 € |
-| Pro | 19,99 € | 80 s (16 clips) | 7,99 € | 5,91 € |
-| Estudio | 39,99 € | 160 s (32 clips) | 15,99 € | 11,83 € |
+| Gratis | 0 € | 0 (editor 3D y efectos de voz, con marca de agua) | 0 € | — |
+| Creador | 9,99 € | 40 | 4,00 € | 2,95 € (42 %) |
+| Pro | 24,99 € | 110 | 10,99 € | 6,39 € (37 %) |
+| Estudio | 79,99 € | 350 | 34,97 € | 20,66 € (37 %) |
 
-Coste de IA: 0,10 $/s (Wan 3.0, 720p) + 5 % de margen de cambio + 10 % por fallos. Ingreso neto = precio − IVA 21 % − comisión de Google 15 % − RevenueCat 1 %. En RevenueCat: entitlements `creador`, `pro`, `estudio` y paquetes con esos mismos identificadores en la offering actual.
+1 crédito = 1 s de vídeo = 1 imagen = 500 caracteres de voz = 15 s de cambio de voz. Clonar una voz = 20 créditos. Ningún uso cuesta más de 0,10 $ por crédito, así que el beneficio mínimo se mantiene aunque el suscriptor gaste todos sus créditos.
+
+Coste calculado con 0,10 $ por crédito + 5 % de margen de cambio + 10 % por fallos. Ingreso neto = precio − IVA 21 % − Google 15 % − RevenueCat 1 %. En RevenueCat: entitlements `creador`, `pro`, `estudio` y paquetes con esos mismos identificadores en la offering actual.
