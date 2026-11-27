@@ -1,0 +1,15 @@
+name = "faracut-ia"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[vars]
+MODEL = "alibaba/wan-3.0/image-to-video"
+RESOLUTION = "720p"
+# Segundos de vídeo con IA al mes según el permiso (entitlement) de RevenueCat
+PLANS = '{"estudio":160,"pro":80,"creador":40}'
+
+# El identificador del almacén se rellena solo al publicar desde GitHub Actions.
+[[kv_namespaces]]
+binding = "DATA"
+id = "KV_ID"

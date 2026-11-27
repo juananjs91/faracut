@@ -1,0 +1,42 @@
+# Publica (o actualiza) el servidor de la IA en Cloudflare.
+# Desde el móvil: Actions › "Publicar servidor IA" › Run workflow.
+name: Publicar servidor IA
+on: workflow_dispatch
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: server } }
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install --no-audit --no-fund
+      - name: Comprobar secretos
+        run: |
+          for v in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do [ -n "${!v}" ] || { echo "::error::Falta el secreto $v (guía de FaraCut)"; exit 1; }; done
+          [ -n "${{ secrets.FAL_KEY }}" ] || { echo "::error::Falta el secreto FAL_KEY (guía de FaraCut)"; exit 1; }
+      - name: Crear o encontrar el almacén de límites
+        run: |
+          ID=$(npx wrangler kv namespace list | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const a=JSON.parse(s.slice(s.indexOf("[")));const n=a.find(x=>x.title==="faracut-data");console.log(n?n.id:"")})')
+          if [ -z "$ID" ]; then
+            ID=$(curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/storage/kv/namespaces" \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" \
+              --data '{"title":"faracut-data"}' | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).result.id))')
+          fi
+          echo "Almacén: $ID"
+          sed -i "s/KV_ID/$ID/" wrangler.toml
+      - run: npx wrangler deploy
+      - name: Guardar claves secretas en Cloudflare
+        env:
+          FAL_KEY: ${{ secrets.FAL_KEY }}
+          REVENUECAT_SECRET: ${{ secrets.REVENUECAT_SECRET }}
+        run: |
+          printf '%s' "$FAL_KEY" | npx wrangler secret put FAL_KEY
+          if [ -n "$REVENUECAT_SECRET" ]; then printf '%s' "$REVENUECAT_SECRET" | npx wrangler secret put REVENUECAT_SECRET; fi
+      - name: Dirección del servidor
+        run: |
+          echo "### Servidor publicado" >> $GITHUB_STEP_SUMMARY
+          echo "Copia la dirección que empieza por https:// y termina en workers.dev (sale en el paso 'Run npx wrangler deploy') y pégala en CONFIG.json › servidorIA" >> $GITHUB_STEP_SUMMARY

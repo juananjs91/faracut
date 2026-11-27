@@ -10,7 +10,8 @@
     "@capacitor/core": "^8.6.3",
     "@capacitor/filesystem": "^8.1.2",
     "@capacitor/share": "^8.0.1",
-    "@capacitor/splash-screen": "^8.0.2"
+    "@capacitor/splash-screen": "^8.0.2",
+    "@revenuecat/purchases-capacitor": "^15.0.0"
   },
   "devDependencies": {
     "@capacitor/assets": "^4.0.0",
