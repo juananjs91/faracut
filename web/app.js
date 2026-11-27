@@ -1,36 +1,37 @@
 // FaraCut 3D · crea dibujos animados con personajes 3D, escenarios 3D y exporta el vídeo.
 (() => {
-const KINDS = { nina: 'Niña', nino: 'Niño', pato: 'Patito', gato: 'Gatito' };
+const KINDS = { perro: 'Perrito', gato: 'Gatito', pato: 'Patito', cohete: 'Cohete', coche: 'Coche de carreras' };
 const COLORS = { rosa: '#ff4f9a', azul: '#2f8cff', amarillo: '#ffd21f', verde: '#3fcf6a', naranja: '#ff8c33', morado: '#9b5cff', rojo: '#ff4a4a', turquesa: '#20c9c0' };
 const CNAME = { rosa: 'Rosa', azul: 'Azul', amarillo: 'Amarillo', verde: 'Verde', naranja: 'Naranja', morado: 'Morado', rojo: 'Rojo', turquesa: 'Turquesa' };
-const PLACES = { parque: 'Parque', cocina: 'Cocina', granja: 'Granja', playa: 'Playa', bosque: 'Bosque', espacio: 'Espacio' };
-const SIZE = { nina: 1, nino: 1, pato: .86, gato: .9 };
+const PLACES = { parque: 'Parque', circuito: 'Circuito', despegue: 'Base espacial', espacio: 'Espacio', playa: 'Playa', bosque: 'Bosque', granja: 'Granja', cocina: 'Cocina' };
+const SIZE = { perro: .8, gato: .85, pato: .8, cohete: 1.15, coche: .52 };
 const BAD = ['sangre', 'arma', 'pistola', 'cuchillo', 'muerte', 'matar', 'muerto', 'desnud', 'sexo', 'droga', 'alcohol', 'violencia', 'tabaco', 'cigarr', 'apuesta'];
 const TITLE_SECS = 2.5;
 const ICONS = { home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', chars: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>', scenes: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 4v5M14 4v5"/>', play: '<rect x="3" y="4" width="18" height="16" rx="3"/><polygon points="10,9 16,12 10,15" fill="currentColor"/>' };
 const TABS = [['home', 'Inicio'], ['scenes', 'Escenas'], ['play', 'Episodio'], ['chars', 'Personajes']];
 
-const defaults = () => ({ tab: 'home', format: 'h', title: 'El pato y el flan amarillo',
-  chars: [{ id: 'c1', name: 'Cuqui', kind: 'nina', color: 'rosa', desc: 'Niña curiosa con coletas' }, { id: 'c2', name: 'Kito', kind: 'nino', color: 'azul', desc: 'Niño risueño con gorra' }, { id: 'c3', name: 'Pato Lulo', kind: 'pato', color: 'amarillo', desc: 'Patito amarillo glotón' }],
-  scenes: [{ id: 's1', text: 'Cuqui y Kito entran en la cocina y ven un flan amarillo enorme.', chars: ['c1', 'c2'], place: 'cocina', dur: 6 },
-    { id: 's2', text: '¡Cuac! Aparece Pato Lulo y quiere probar el flan.', chars: ['c1', 'c2', 'c3'], place: 'cocina', dur: 6 },
-    { id: 's3', text: 'Los tres comparten el flan y cantan en el parque.', chars: ['c1', 'c2', 'c3'], place: 'parque', dur: 6 }] });
+const defaults = () => ({ tab: 'home', format: 'h', title: 'La gran aventura de Toby',
+  chars: [{ id: 'c1', name: 'Toby', kind: 'perro', color: 'naranja', desc: 'Perrito juguetón' }, { id: 'c2', name: 'Rayo', kind: 'coche', color: 'rojo', desc: 'El coche más rápido del circuito' }, { id: 'c3', name: 'Estrella', kind: 'cohete', color: 'azul', desc: 'Cohete que viaja a los planetas' }],
+  scenes: [{ id: 's1', text: 'Toby se despierta en el parque con muchas ganas de jugar.', chars: ['c1'], place: 'parque', dur: 6 },
+    { id: 's2', text: 'Rayo, el coche de carreras, le invita a ver una carrera.', chars: ['c1', 'c2'], place: 'circuito', dur: 6 },
+    { id: 's3', text: '¡Despegue! El cohete Estrella lleva a Toby al espacio.', chars: ['c1', 'c3'], place: 'despegue', dur: 6 },
+    { id: 's4', text: 'Toby y Estrella saludan a los planetas.', chars: ['c1', 'c3'], place: 'espacio', dur: 6 }] });
 
 // ---------- datos (con migración de la versión anterior) ----------
 const near = hex => { if (COLORS[hex]) return hex; const n = parseInt(String(hex).slice(1), 16); if (isNaN(n)) return 'morado'; const r = n >> 16, g = n >> 8 & 255, b = n & 255; let best = 'morado', d = 1e9; for (const [k, h] of Object.entries(COLORS)) { const m = parseInt(h.slice(1), 16), dd = (r - (m >> 16)) ** 2 + (g - (m >> 8 & 255)) ** 2 + (b - (m & 255)) ** 2; if (dd < d) { d = dd; best = k; } } return best; };
 function load() {
   let s = null;
-  try { s = JSON.parse(localStorage.getItem('faracut') || 'null'); } catch (e) {}
-  if (!s) { try { const old = JSON.parse(localStorage.getItem('pequestudio') || 'null'); if (old && old.chars) s = old; } catch (e) {} }
+  try { s = JSON.parse(localStorage.getItem('faracut2') || 'null'); } catch (e) {}
+  try { localStorage.removeItem('pequestudio'); localStorage.removeItem('faracut'); } catch (e) {}
   if (!s || !Array.isArray(s.chars) || !Array.isArray(s.scenes)) return defaults();
-  s.chars = s.chars.filter(c => c && c.id).map(c => ({ id: c.id, name: String(c.name || 'Sin nombre').slice(0, 20), kind: KINDS[c.kind] ? c.kind : c.kind === 'animal' ? 'pato' : 'nina', color: near(c.color), desc: String(c.desc || '').slice(0, 80) }));
+  s.chars = s.chars.filter(c => c && c.id).map(c => ({ id: c.id, name: String(c.name || 'Sin nombre').slice(0, 20), kind: KINDS[c.kind] ? c.kind : 'perro', color: near(c.color), desc: String(c.desc || '').slice(0, 80) }));
   if (!s.chars.length) s.chars = defaults().chars;
   s.scenes = s.scenes.filter(x => x && x.id).map(x => ({ id: x.id, text: String(x.text || '').slice(0, 220), chars: (x.chars || []).filter(id => s.chars.some(c => c.id === id)), place: PLACES[x.place] ? x.place : 'parque', dur: [4, 6, 8, 10].includes(+x.dur) ? +x.dur : 6 }));
   s.format = s.format === 'v' ? 'v' : 'h'; s.title = String(s.title || 'Mi episodio').slice(0, 60);
   return s;
 }
 let S = load(); S.tab = 'home';
-const save = () => { try { localStorage.setItem('faracut', JSON.stringify({ format: S.format, title: S.title, chars: S.chars, scenes: S.scenes })); } catch (e) { toast('No se pudo guardar en este móvil'); } };
+const save = () => { try { localStorage.setItem('faracut2', JSON.stringify({ format: S.format, title: S.title, chars: S.chars, scenes: S.scenes })); } catch (e) { toast('No se pudo guardar en este móvil'); } };
 const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const $ = id => document.getElementById(id);
 const uid = () => Math.random().toString(36).slice(2, 8);
@@ -50,32 +51,40 @@ const portrait = c => `<div class="pt" style="background:radial-gradient(circle 
 
 const SYM = { chars: '<circle cx="32" cy="24" r="9"/><path d="M15 48c0-9 8-14 17-14s17 5 17 14z"/>', scenes: '<rect x="14" y="26" width="36" height="24" rx="4"/><path d="M14 18l34-6 2 9-34 6z"/>', short: '<rect x="22" y="12" width="20" height="40" rx="5"/>', long: '<rect x="12" y="18" width="40" height="26" rx="4"/><rect x="26" y="46" width="12" height="4" rx="2"/>', places: '<path d="M10 46l14-18 10 12 6-7 14 13z"/><circle cx="44" cy="20" r="6"/>', play: '<circle cx="32" cy="32" r="18"/><polygon points="28,24 41,32 28,40" fill="rgba(0,0,0,.35)"/>', shield: '<path d="M32 12l17 6v12c0 11-8 18-17 22-9-4-17-11-17-22V18z"/>', export: '<path d="M32 12v24M22 26l10 10 10-10"/><rect x="14" y="40" width="36" height="10" rx="4"/>' };
 function orb(k, a, b) { const p = 'o' + k; return `<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="${p}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect x="2" y="4" width="60" height="58" rx="18" fill="rgba(0,0,0,.35)"/><rect x="2" y="2" width="60" height="57" rx="18" fill="url(#${p})"/><ellipse cx="24" cy="13" rx="18" ry="6" fill="#fff" opacity=".3"/><g fill="#fff" stroke="#fff" stroke-width="${k === 'export' ? 5 : 0}" stroke-linecap="round" stroke-linejoin="round">${SYM[k]}</g></svg>`; }
-const FEAT = [['chars', 'Personajes 3D', 'Niñas, niños, patitos y gatitos en 8 colores', '#ff8fc8', '#d9318a', 'tab:chars'], ['places', '6 escenarios 3D', 'Parque, cocina, granja, playa, bosque y espacio', '#7ee08a', '#1f9a4a', 'tab:scenes'],
-  ['scenes', 'Escribe escenas', 'Cuenta qué pasa y quién sale', '#ffd36b', '#f08a12', 'tab:scenes'], ['play', 'Monta el episodio', 'Las escenas se animan solas', '#a3ff8f', '#2ea14c', 'tab:play'],
+const FEAT = [['chars', 'Personajes 3D', 'Perritos, gatitos, patitos, cohetes y coches de carreras', '#ff8fc8', '#d9318a', 'tab:chars'], ['places', '8 escenarios 3D', 'Parque, circuito, base espacial, espacio y más', '#7ee08a', '#1f9a4a', 'tab:scenes'],
+  ['scenes', 'Guion por escenas', 'Escribe qué pasa y quién sale', '#ffd36b', '#f08a12', 'tab:scenes'], ['play', 'Animación automática', 'Los personajes entran, botan y despegan', '#a3ff8f', '#2ea14c', 'tab:play'],
   ['short', 'Shorts 9:16', 'Vídeos verticales para cada día', '#5ef0ff', '#1592c9', 'fmt:v'], ['long', 'Vídeos 16:9', 'Episodios para YouTube', '#7aa8ff', '#3a4fe0', 'fmt:h'],
-  ['export', 'Exporta el vídeo', 'Guárdalo o súbelo a YouTube', '#c9a2ff', '#7a35e8', 'tab:play'], ['shield', 'Filtro infantil', 'Solo contenido apto para peques', '#9ff0d8', '#13a07a', 'info']];
+  ['export', 'Exporta en vídeo', 'Guárdalo o súbelo a YouTube', '#c9a2ff', '#7a35e8', 'tab:play'], ['shield', 'Filtro infantil', 'Solo contenido apto para peques', '#9ff0d8', '#13a07a', 'info']];
+
+// Escaparate animado de la portada
+const SHOW = {
+  rocket: `<div class="show sh-rocket"><img class="bg" src="img/bg-despegue-h.webp" alt=""><div class="smoke"><i></i><i></i><i></i><i></i><i></i></div><div class="rk"><img class="fl" src="img/s-llama.webp" alt=""><img class="body" src="img/s-cohete.webp" alt="Cohete despegando"></div></div>`,
+  car: `<div class="show sh-car"><img class="bg" src="img/bg-circuito-h.webp" alt=""><div class="car"><span class="lines"></span><img src="img/s-coche.webp" alt="Coche de carreras"></div></div>`,
+  swing: `<div class="show sh-swing"><img class="bg" src="img/bg-parque-h.webp" alt=""><div class="sw-box"><img src="img/s-columpio.webp" alt=""><img class="seat" src="img/s-asiento.webp" alt="Perrito en un columpio"></div></div>`,
+};
 
 const views = {
   home() {
     const first = S.scenes[0];
-    return `<div class="hero"><h2>Crea dibujos animados en 3D</h2><p class="sub">Elige personajes, escribe las escenas y exporta tu episodio para YouTube, desde el móvil.</p>
-<div class="stage h">${sceneHTML({ place: 'parque', chars: S.chars.slice(0, 3).map(c => c.id) }, 'h')}</div>
-<div class="row"><button class="btn grow" data-go="tab:scenes">✨ Crear episodio</button><button class="btn2" data-go="tab:chars">Mis personajes</button></div></div>
-<h3 class="sec">¿Qué puedes hacer?</h3>
+    return `<div class="hero"><p class="eyebrow">Estudio de animación 3D</p><h2>Dibujos animados en 3D, listos para YouTube</h2><p class="sub">Elige personajes, escribe el guion y FaraCut anima cada escena y exporta el vídeo. Todo desde el móvil.</p>
+<figure class="stage h showmain">${SHOW.rocket}<figcaption>Despegue espacial</figcaption></figure>
+<div class="showgrid"><figure class="stage h">${SHOW.car}<figcaption>Gran carrera</figcaption></figure><figure class="stage h">${SHOW.swing}<figcaption>En el columpio</figcaption></figure></div>
+<div class="row"><button class="btn grow" data-go="tab:scenes">Crear episodio</button><button class="btn2" data-go="tab:chars">Ver personajes</button></div></div>
+<h3 class="sec">Todo lo que necesitas</h3>
 <div class="tiles">${FEAT.map(f => `<button type="button" class="tile" data-go="${f[5]}">${orb(f[0], f[3], f[4])}<b>${f[1]}</b><span>${f[2]}</span></button>`).join('')}</div>
-<h3 class="sec">Así de fácil</h3>
+<h3 class="sec">Tres pasos</h3>
 <div class="steps">${[['1', 'Elige', 'tus personajes'], ['2', 'Escribe', 'las escenas'], ['3', 'Exporta', 'y publica']].map(s => `<div class="step"><span class="num">${s[0]}</span><b>${s[1]}</b><span>${s[2]}</span></div>`).join('')}</div>
-${first ? `<h3 class="sec">Sigue con tu episodio</h3><button type="button" class="card cont" data-go="tab:scenes"><div class="thumb h">${sceneHTML(first, 'h')}</div><div><b>${esc(S.title)}</b><div class="mini">${S.scenes.length} escena${S.scenes.length === 1 ? '' : 's'} · ${S.scenes.reduce((a, s) => a + s.dur, 0)} s</div></div></button>` : ''}`;
+${first ? `<h3 class="sec">Tu episodio</h3><button type="button" class="card cont" data-go="tab:scenes"><div class="thumb h">${sceneHTML(first, 'h')}</div><div><b>${esc(S.title)}</b><div class="mini">${S.scenes.length} escena${S.scenes.length === 1 ? '' : 's'} · ${S.scenes.reduce((a, s) => a + s.dur, 0)} s</div></div></button>` : ''}`;
   },
   chars() {
     return `<h2>Tus personajes</h2><p class="sub">Créalos una vez y saldrán iguales en todas las escenas.</p>
 <div class="cgrid">${S.chars.map(c => `<div class="ccard">${portrait(c)}<div class="cb"><b>${esc(c.name)}</b><div class="mini">${esc(c.desc || KINDS[c.kind] + ' ' + CNAME[c.color].toLowerCase())}</div><button class="btn2 sm" data-delc="${c.id}" aria-label="Borrar ${esc(c.name)}">Borrar</button></div></div>`).join('')}</div>
 <form class="card" id="fchar"><b>Nuevo personaje</b>
-<label for="cn">Nombre</label><input id="cn" required maxlength="20" placeholder="Ej.: Gatita Mimi">
-<label id="lk">Tipo</label><div class="kinds" role="group" aria-labelledby="lk">${Object.entries(KINDS).map(([k, l], i) => `<button type="button" data-kind="${k}" aria-pressed="${i === 0}"><img src="img/c-${k}-${['rosa', 'azul', 'amarillo', 'naranja'][i]}.webp" alt="">${l}</button>`).join('')}</div>
+<label for="cn">Nombre</label><input id="cn" required maxlength="20" placeholder="Ej.: Perrito Toby">
+<label id="lk">Tipo</label><div class="kinds" role="group" aria-labelledby="lk">${Object.entries(KINDS).map(([k, l], i) => `<button type="button" data-kind="${k}" aria-pressed="${i === 0}"><img src="img/c-${k}-${['naranja', 'morado', 'amarillo', 'azul', 'rojo'][i]}.webp" alt="">${l}</button>`).join('')}</div>
 <label id="lc">Color</label><div class="sw" role="group" aria-labelledby="lc">${Object.entries(COLORS).map(([k, h], i) => `<button type="button" data-color="${k}" aria-pressed="${i === 3}" aria-label="${CNAME[k]}" style="background:${h}"></button>`).join('')}</div>
 <div class="preview"><div id="prev"></div><div class="mini">Así será tu personaje en las escenas.</div></div>
-<label for="cd">Descripción (opcional)</label><input id="cd" maxlength="80" placeholder="Ej.: gatita dormilona que adora la leche">
+<label for="cd">Descripción (opcional)</label><input id="cd" maxlength="80" placeholder="Ej.: perrito juguetón que adora los columpios">
 <div style="height:12px"></div><button class="btn" type="submit" style="width:100%">Añadir personaje</button></form>`;
   },
   scenes() {
@@ -90,7 +99,7 @@ ${S.scenes.map((sc, i) => `<div class="card scene"><div class="thumb ${S.format}
 <div class="row" style="margin-top:8px"><button class="btn2 grow" data-see="${i}">▶ Ver</button>
 <button class="btn2 ic" data-up="${i}" aria-label="Subir escena" ${i ? '' : 'disabled'}>↑</button><button class="btn2 ic" data-dels="${sc.id}" aria-label="Borrar escena">✕</button></div></div></div>`).join('')}
 <form class="card" id="fscene"><b>Nueva escena</b>
-<label for="st">¿Qué pasa en la escena?</label><textarea id="st" required maxlength="220" placeholder="Ej.: Kito encuentra una galleta detrás del sofá"></textarea>
+<label for="st">¿Qué pasa en la escena?</label><textarea id="st" required maxlength="220" placeholder="Ej.: Toby encuentra una pelota detrás del árbol"></textarea>
 <label id="lp">Personajes</label><div class="chips" role="group" aria-labelledby="lp">${S.chars.map(c => `<button type="button" class="chip" data-pick="${c.id}" aria-pressed="false"><img src="${imgOf(c)}" alt="">${esc(c.name)}</button>`).join('')}</div>
 <label id="ll">Lugar</label><div class="places" role="group" aria-labelledby="ll">${Object.entries(PLACES).map(([k, v], j) => `<button type="button" class="place" data-place="${k}" aria-pressed="${j === 0}" style="background-image:url(${bgOf(k, 'h')})"><span>${v}</span></button>`).join('')}</div>
 <label id="ld">Duración</label><div class="seg" role="group" aria-labelledby="ld">${[4, 6, 8, 10].map(d => `<button type="button" data-dur="${d}" aria-pressed="${d === 6}">${d} s</button>`).join('')}</div>
@@ -114,14 +123,15 @@ function render() {
 }
 const go = t => { if (recording) { toast('Espera a que termine la exportación'); return; } S.tab = t; render(); window.scrollTo(0, 0); };
 const sel = a => document.querySelector(`[${a}][aria-pressed=true]`);
-function updPrev() { const p = $('prev'); if (!p) return; const k = (sel('data-kind') || { dataset: { kind: 'nina' } }).dataset.kind, c = (sel('data-color') || { dataset: { color: 'verde' } }).dataset.color; p.innerHTML = portrait({ kind: k, color: c, name: 'Vista previa' }); }
+function updPrev() { const p = $('prev'); if (!p) return; const k = (sel('data-kind') || { dataset: { kind: 'perro' } }).dataset.kind, c = (sel('data-color') || { dataset: { color: 'verde' } }).dataset.color; p.innerHTML = portrait({ kind: k, color: c, name: 'Vista previa' }); }
 
 // ---------- animación en canvas (reproducir y exportar) ----------
-const IMG = {};
+const IMG = {}, FLAME = {};
 const getImg = src => IMG[src] || (IMG[src] = new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; }));
 async function prepare(fmt) {
   const list = [];
   for (const sc of S.scenes) { list.push(getImg(bgOf(sc.place, fmt))); sc.chars.map(charById).filter(Boolean).forEach(c => list.push(getImg(imgOf(c)))); }
+  FLAME.img = await getImg('img/s-llama.webp');
   await Promise.all(list);
   const out = [];
   for (const sc of S.scenes) out.push({ sc, bg: await getImg(bgOf(sc.place, fmt)), cs: await Promise.all(sc.chars.map(charById).filter(Boolean).map(async c => ({ c, img: await getImg(imgOf(c)) }))) });
@@ -139,8 +149,11 @@ function drawScene(ctx, W, H, item, t, fmt) {
     if (!img) return;
     const h = H * hp * SIZE[c.kind], w = img.width / img.height * h;
     const tx = W * (i + 1) / (n + 1), from = i < n / 2 ? -w : W + w, k = ease((t - i * .25) / .9);
-    const x = from + (tx - from) * k, hop = Math.abs(Math.sin((t * 2.6 + i * .7) * Math.PI)) * h * .05, sq = 1 + Math.sin((t * 5.2 + i * 1.4) * Math.PI) * .012;
-    ctx.save(); ctx.translate(x, base); ctx.scale(1 / sq, sq);
+    let x = from + (tx - from) * k, hop = Math.abs(Math.sin((t * 2.6 + i * .7) * Math.PI)) * h * .05, sq = 1 + Math.sin((t * 5.2 + i * 1.4) * Math.PI) * .012, lift = 0;
+    if (c.kind === 'coche') { x = -w + (tx + w) * ease((t - i * .25) / 1.4); hop = Math.abs(Math.sin(t * 40)) * h * .012; sq = 1; }
+    if (c.kind === 'cohete') { lift = Math.max(0, t - d * .45) ** 2 * H * .05; hop = 0; sq = 1; x = tx + (from - tx) * (1 - ease((t - i * .25) / .9)) * .0; }
+    ctx.save(); ctx.translate(x, base - lift); ctx.scale(1 / sq, sq);
+    if (c.kind === 'cohete' && FLAME.img && (lift > 0 || t > d * .3)) { const fw = w * .42, fh = fw * 2 * (.9 + Math.random() * .25); ctx.drawImage(FLAME.img, -fw / 2 - w * .02, -h * .05, fw, fh); }
     ctx.drawImage(img, -w / 2, -h - hop, w, h); ctx.restore();
   });
   // subtítulo
@@ -234,7 +247,7 @@ document.addEventListener('submit', e => {
     const name = $('cn').value.trim(); if (!name) return;
     if (unsafe(name + ' ' + $('cd').value)) { toast('Nombre o descripción no aptos para niños'); return; }
     if (S.chars.length >= 12) { toast('Puedes tener hasta 12 personajes'); return; }
-    S.chars.push({ id: 'c' + uid(), name, kind: (sel('data-kind') || { dataset: { kind: 'nina' } }).dataset.kind, color: (sel('data-color') || { dataset: { color: 'verde' } }).dataset.color, desc: $('cd').value.trim() });
+    S.chars.push({ id: 'c' + uid(), name, kind: (sel('data-kind') || { dataset: { kind: 'perro' } }).dataset.kind, color: (sel('data-color') || { dataset: { color: 'verde' } }).dataset.color, desc: $('cd').value.trim() });
     save(); render(); toast(`${name} añadido`);
   }
   if (e.target.id === 'fscene') {
