@@ -170,7 +170,7 @@ ${sc.aiJob ? '' : `<button class="btn" style="width:100%;margin-top:8px;min-heig
   },
   plans() {
     const cur = ME.plan, bal = ME.bal, price = id => (ME.offs[id] && ME.offs[id].price) || PLANS.find(p => p[0] === id)[2];
-    return `<h2>Planes</h2><p class="sub">Crea imágenes, vídeos y voces con IA. El editor 3D y los efectos de voz son gratis para siempre.</p>
+    return `<h2 id="plansTitle">Planes</h2><p class="sub">Crea imágenes, vídeos y voces con IA. El editor 3D y los efectos de voz son gratis para siempre.</p>
 ${bal && cur !== 'gratis' ? `<div class="card"><div class="row"><b class="grow">Tu plan: ${esc(PLANS.find(p => p[0] === cur)?.[1] || cur)}</b><span class="mini">${bal.remaining} créditos disponibles</span></div><div class="bar"><i style="width:${bal.allowance ? (bal.allowance - bal.remaining) / bal.allowance * 100 : 0}%"></i></div><div class="mini" style="margin-top:6px">Los créditos se renuevan el día 1 de cada mes.</div></div>` : ''}
 <div class="card plan"><div class="row" style="margin-top:6px"><b class="grow" style="font-size:20px">Gratis</b><span class="price">0 €</span></div><ul><li>Editor 3D con personajes y escenarios</li><li>Efectos de voz (robot, eco, grave…)</li><li>Con marca de agua de FaraCut</li></ul>${cur === 'gratis' ? '<button class="btn2" style="width:100%" disabled>Plan actual</button>' : ''}</div>
 ${PLANS.map(p => `<div class="card plan ${p[5] ? 'best' : ''}">${p[5] ? '<span class="tag">Más elegido</span>' : ''}<div class="row" style="margin-top:6px"><b class="grow" style="font-size:20px">${p[1]}</b><span class="price">${esc(price(p[0]))}</span></div><div class="mini">al mes</div><ul>${p[4].map(x => `<li>${x}</li>`).join('')}</ul><button class="${p[5] ? 'btn' : 'btn2'}" style="width:100%" data-buy="${p[0]}" ${cur === p[0] ? 'disabled' : ''}>${cur === p[0] ? 'Plan actual' : 'Elegir ' + p[1]}</button></div>`).join('')}
@@ -178,7 +178,7 @@ ${cur === 'creadora' ? '<div class="card"><b style="color:var(--lime)">Modo crea
 <div class="row"><button class="btn2 grow" id="restore">Restaurar compras</button>${cur !== 'gratis' ? '<button class="btn2 grow" id="manage">Gestionar suscripción</button>' : ''}</div>
 <div class="card"><b>¿Cuánto gasta cada cosa?</b><ul class="costs"><li><span>1 imagen</span><b>1 crédito</b></li><li><span>1 segundo de vídeo</span><b>1 crédito</b></li><li><span>Clonar una voz</span><b>20 créditos</b></li><li><span>500 caracteres de voz</span><b>1 crédito</b></li><li><span>15 s de cambio de voz con IA</span><b>1 crédito</b></li><li><span>Efectos de voz y editor 3D</span><b>Gratis</b></li></ul></div>
 <p class="mini" style="margin-top:12px">Las suscripciones se renuevan cada mes y se pueden cancelar cuando quieras desde Google Play. Si un trabajo falla, te devolvemos los créditos.${window.FC && FC.privacyUrl ? ` <a href="${esc(FC.privacyUrl)}" target="_blank" rel="noopener">Privacidad</a>` : ''}</p>
-<button class="btn2 sm" id="creator" style="width:auto;margin:12px auto 0;display:block;opacity:.6">${cur === 'creadora' ? 'Salir del modo creador' : 'Modo creador'}</button>`;
+${cur === 'creadora' ? '<button class="btn2 sm" id="creator" style="width:auto;margin:12px auto 0;display:block;opacity:.6">Salir del modo creador</button>' : ''}`;
   },
   play() {
     const tot = S.scenes.reduce((a, s) => a + s.dur, 0) + (S.scenes.length ? TITLE_SECS : 0);
@@ -335,6 +335,13 @@ document.addEventListener('click', e => {
   else if (b.id === 'restore') { if (!window.FC || !FC.payReady) { toast('Disponible en la app de Android'); return; } FC.restore().then(p => { ME.plan = p; toast(p === 'gratis' ? 'No hay suscripciones en esta cuenta de Google' : 'Compras restauradas'); refreshPlan(); render(); }, () => toast('No se pudo comprobar')); }
   else if (b.id === 'manage') FC.manage();
   else if (b.id === 'creator') creatorMode();
+});
+// Acceso oculto al modo creador: tocar 7 veces seguidas el título «Planes».
+let secretTaps = 0, secretTimer = 0;
+document.addEventListener('click', e => {
+  if (!e.target.closest || !e.target.closest('#plansTitle')) return;
+  clearTimeout(secretTimer); secretTimer = setTimeout(() => { secretTaps = 0; }, 1500);
+  if (++secretTaps >= 7) { secretTaps = 0; creatorMode(); }
 });
 document.addEventListener('input', e => { if (e.target.id === 'et') { S.title = e.target.value.slice(0, 60); save(); } });
 document.addEventListener('change', e => { if (e.target.id === 'et' && unsafe(S.title)) { S.title = 'Mi episodio'; save(); render(); toast('El título tiene algo no apto para niños'); } });

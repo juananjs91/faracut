@@ -33,5 +33,5 @@ Coste calculado con 0,10 $ por crédito + 5 % de margen de cambio + 10 % por fal
 ## Modo creador (uso sin límites para ti)
 1. En GitHub › Settings › Secrets › Actions, crea el secreto `CREATOR_KEY` con una contraseña larga que solo sepas tú (mínimo 8 caracteres).
 2. Lanza Actions › "Publicar servidor IA".
-3. En la app: Planes › "Modo creador" (abajo del todo) › escribe la misma contraseña.
+3. En la app, entra por el acceso oculto de la pantalla Planes y escribe la misma contraseña. Sin la contraseña no sirve de nada.
 La clave se guarda solo en tu móvil, nunca en el repositorio. Lo que generes se paga directamente en fal.ai.
