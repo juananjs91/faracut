@@ -62,7 +62,7 @@ async function creatorMode() {
   try { const b = await FC.balance(); if (b.plan !== 'creadora') throw 0; ME.plan = 'creadora'; ME.bal = b; toast('Modo creador activado'); render(); }
   catch (e) { FC.setCreator(''); toast(e && e.code === 'network' ? 'No hay conexión con el servidor' : 'Clave incorrecta'); }
 }
-const AI_MSG = { no_plan: 'Elige un plan para usar la IA', no_credits: 'No te quedan créditos suficientes este mes', busy: 'Espera a que terminen los vídeos que se están generando', unsafe: 'El texto de la escena no es apto para niños', network: 'No hay conexión a Internet', not_configured: 'La IA todavía no está conectada en esta versión' };
+const AI_MSG = { no_funds: 'Tu cuenta de fal.ai no tiene saldo. Recarga en fal.ai y vuelve a intentarlo', server: 'El servidor de IA ha fallado. Inténtalo en un rato', no_plan: 'Elige un plan para usar la IA', no_credits: 'No te quedan créditos suficientes este mes', busy: 'Espera a que terminen los vídeos que se están generando', unsafe: 'El texto de la escena no es apto para niños', network: 'No hay conexión a Internet', not_configured: 'La IA todavía no está conectada en esta versión' };
 async function startFrame(sc, fmt) {
   const W = fmt === 'v' ? 720 : 1280, H = fmt === 'v' ? 1280 : 720, c = document.createElement('canvas'); c.width = W; c.height = H;
   const all = await prepare(fmt), it = all.find(x => x.sc.id === sc.id); if (!it) return null;
