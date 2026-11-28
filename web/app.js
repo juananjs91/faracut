@@ -54,6 +54,14 @@ async function refreshPlan() {
   if (FC.aiReady) try { ME.bal = await FC.balance(); } catch (e) {}
   if (['plans', 'scenes', 'create', 'voice', 'gallery'].includes(S.tab)) render();
 }
+async function creatorMode() {
+  if (!window.FC || !FC.aiReady) { toast('El modo creador funciona en la app de Android con el servidor de IA'); return; }
+  if (FC.isCreator()) { FC.setCreator(''); ME.plan = 'gratis'; ME.bal = null; toast('Modo creador desactivado'); refreshPlan(); render(); return; }
+  const k = (prompt('Clave del modo creador') || '').trim(); if (!k) return;
+  FC.setCreator(k);
+  try { const b = await FC.balance(); if (b.plan !== 'creadora') throw 0; ME.plan = 'creadora'; ME.bal = b; toast('Modo creador activado'); render(); }
+  catch (e) { FC.setCreator(''); toast(e && e.code === 'network' ? 'No hay conexión con el servidor' : 'Clave incorrecta'); }
+}
 const AI_MSG = { no_plan: 'Elige un plan para usar la IA', no_credits: 'No te quedan créditos suficientes este mes', busy: 'Espera a que terminen los vídeos que se están generando', unsafe: 'El texto de la escena no es apto para niños', network: 'No hay conexión a Internet', not_configured: 'La IA todavía no está conectada en esta versión' };
 async function startFrame(sc, fmt) {
   const W = fmt === 'v' ? 720 : 1280, H = fmt === 'v' ? 1280 : 720, c = document.createElement('canvas'); c.width = W; c.height = H;
@@ -166,9 +174,11 @@ ${sc.aiJob ? '' : `<button class="btn" style="width:100%;margin-top:8px;min-heig
 ${bal && cur !== 'gratis' ? `<div class="card"><div class="row"><b class="grow">Tu plan: ${esc(PLANS.find(p => p[0] === cur)?.[1] || cur)}</b><span class="mini">${bal.remaining} créditos disponibles</span></div><div class="bar"><i style="width:${bal.allowance ? (bal.allowance - bal.remaining) / bal.allowance * 100 : 0}%"></i></div><div class="mini" style="margin-top:6px">Los créditos se renuevan el día 1 de cada mes.</div></div>` : ''}
 <div class="card plan"><div class="row" style="margin-top:6px"><b class="grow" style="font-size:20px">Gratis</b><span class="price">0 €</span></div><ul><li>Editor 3D con personajes y escenarios</li><li>Efectos de voz (robot, eco, grave…)</li><li>Con marca de agua de FaraCut</li></ul>${cur === 'gratis' ? '<button class="btn2" style="width:100%" disabled>Plan actual</button>' : ''}</div>
 ${PLANS.map(p => `<div class="card plan ${p[5] ? 'best' : ''}">${p[5] ? '<span class="tag">Más elegido</span>' : ''}<div class="row" style="margin-top:6px"><b class="grow" style="font-size:20px">${p[1]}</b><span class="price">${esc(price(p[0]))}</span></div><div class="mini">al mes</div><ul>${p[4].map(x => `<li>${x}</li>`).join('')}</ul><button class="${p[5] ? 'btn' : 'btn2'}" style="width:100%" data-buy="${p[0]}" ${cur === p[0] ? 'disabled' : ''}>${cur === p[0] ? 'Plan actual' : 'Elegir ' + p[1]}</button></div>`).join('')}
+${cur === 'creadora' ? '<div class="card"><b style="color:var(--lime)">Modo creador activo</b><div class="mini">Uso de la IA sin límite de créditos.</div></div>' : ''}
 <div class="row"><button class="btn2 grow" id="restore">Restaurar compras</button>${cur !== 'gratis' ? '<button class="btn2 grow" id="manage">Gestionar suscripción</button>' : ''}</div>
 <div class="card"><b>¿Cuánto gasta cada cosa?</b><ul class="costs"><li><span>1 imagen</span><b>1 crédito</b></li><li><span>1 segundo de vídeo</span><b>1 crédito</b></li><li><span>Clonar una voz</span><b>20 créditos</b></li><li><span>500 caracteres de voz</span><b>1 crédito</b></li><li><span>15 s de cambio de voz con IA</span><b>1 crédito</b></li><li><span>Efectos de voz y editor 3D</span><b>Gratis</b></li></ul></div>
-<p class="mini" style="margin-top:12px">Las suscripciones se renuevan cada mes y se pueden cancelar cuando quieras desde Google Play. Si un trabajo falla, te devolvemos los créditos.${window.FC && FC.privacyUrl ? ` <a href="${esc(FC.privacyUrl)}" target="_blank" rel="noopener">Privacidad</a>` : ''}</p>`;
+<p class="mini" style="margin-top:12px">Las suscripciones se renuevan cada mes y se pueden cancelar cuando quieras desde Google Play. Si un trabajo falla, te devolvemos los créditos.${window.FC && FC.privacyUrl ? ` <a href="${esc(FC.privacyUrl)}" target="_blank" rel="noopener">Privacidad</a>` : ''}</p>
+<button class="btn2 sm" id="creator" style="width:auto;margin:12px auto 0;display:block;opacity:.6">${cur === 'creadora' ? 'Salir del modo creador' : 'Modo creador'}</button>`;
   },
   play() {
     const tot = S.scenes.reduce((a, s) => a + s.dur, 0) + (S.scenes.length ? TITLE_SECS : 0);
@@ -324,6 +334,7 @@ document.addEventListener('click', e => {
   else if (d.buy) { if (!window.FC || !FC.payReady) { toast('Los planes se contratan en la app de Android'); return; } FC.buy(d.buy).then(p => { if (p) { ME.plan = p; toast('¡Plan activado!'); refreshPlan(); render(); } }, e => toast(e && e.code === 'no_product' ? 'Este plan aún no está disponible en Google Play' : 'No se pudo completar el pago')); }
   else if (b.id === 'restore') { if (!window.FC || !FC.payReady) { toast('Disponible en la app de Android'); return; } FC.restore().then(p => { ME.plan = p; toast(p === 'gratis' ? 'No hay suscripciones en esta cuenta de Google' : 'Compras restauradas'); refreshPlan(); render(); }, () => toast('No se pudo comprobar')); }
   else if (b.id === 'manage') FC.manage();
+  else if (b.id === 'creator') creatorMode();
 });
 document.addEventListener('input', e => { if (e.target.id === 'et') { S.title = e.target.value.slice(0, 60); save(); } });
 document.addEventListener('change', e => { if (e.target.id === 'et' && unsafe(S.title)) { S.title = 'Mi episodio'; save(); render(); toast('El título tiene algo no apto para niños'); } });

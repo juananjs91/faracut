@@ -29,3 +29,9 @@ Secretos necesarios (Settings › Secrets and variables › Actions): `ANDROID_K
 1 crédito = 1 s de vídeo = 1 imagen = 500 caracteres de voz = 15 s de cambio de voz. Clonar una voz = 20 créditos. Ningún uso cuesta más de 0,10 $ por crédito, así que el beneficio mínimo se mantiene aunque el suscriptor gaste todos sus créditos.
 
 Coste calculado con 0,10 $ por crédito + 5 % de margen de cambio + 10 % por fallos. Ingreso neto = precio − IVA 21 % − Google 15 % − RevenueCat 1 %. En RevenueCat: entitlements `creador`, `pro`, `estudio` y paquetes con esos mismos identificadores en la offering actual.
+
+## Modo creador (uso sin límites para ti)
+1. En GitHub › Settings › Secrets › Actions, crea el secreto `CREATOR_KEY` con una contraseña larga que solo sepas tú (mínimo 8 caracteres).
+2. Lanza Actions › "Publicar servidor IA".
+3. En la app: Planes › "Modo creador" (abajo del todo) › escribe la misma contraseña.
+La clave se guarda solo en tu móvil, nunca en el repositorio. Lo que generes se paga directamente en fal.ai.

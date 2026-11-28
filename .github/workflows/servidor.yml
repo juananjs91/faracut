@@ -33,9 +33,11 @@ jobs:
         env:
           FAL_KEY: ${{ secrets.FAL_KEY }}
           REVENUECAT_SECRET: ${{ secrets.REVENUECAT_SECRET }}
+          CREATOR_KEY: ${{ secrets.CREATOR_KEY }}
         run: |
           printf '%s' "$FAL_KEY" | npx wrangler secret put FAL_KEY
           if [ -n "$REVENUECAT_SECRET" ]; then printf '%s' "$REVENUECAT_SECRET" | npx wrangler secret put REVENUECAT_SECRET; fi
+          if [ -n "$CREATOR_KEY" ]; then printf '%s' "$CREATOR_KEY" | npx wrangler secret put CREATOR_KEY; fi
       - name: Dirección del servidor
         run: |
           echo "### Servidor publicado" >> $GITHUB_STEP_SUMMARY

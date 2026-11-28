@@ -16,6 +16,10 @@ function userId() {
   return id;
 }
 
+// ---------- modo creador (clave guardada solo en este móvil) ----------
+const creatorKey = () => { try { return localStorage.getItem('faracut-creator') || ''; } catch (e) { return ''; } };
+function setCreator(key) { try { if (key) localStorage.setItem('faracut-creator', key); else localStorage.removeItem('faracut-creator'); } catch (e) {} }
+
 // ---------- planes ----------
 let rcReady = null;
 function rc() {
@@ -30,6 +34,7 @@ async function offerings() {
   try { const o = await Purchases.getOfferings(); const out = {}; ((o.current && o.current.availablePackages) || []).forEach(p => { out[p.identifier] = { pkg: p, price: p.product && p.product.priceString }; }); return out; } catch (e) { return {}; }
 }
 async function plan() {
+  if (creatorKey()) return 'creadora';
   if (!(await rc())) return 'gratis';
   try { const { customerInfo } = await Purchases.getCustomerInfo(); return planFrom(customerInfo); } catch (e) { return 'gratis'; }
 }
@@ -45,6 +50,7 @@ function manage() { window.open('https://play.google.com/store/account/subscript
 // ---------- vídeo con IA ----------
 const api = async (path, opt) => {
   if (!CFG.servidorIA) throw err('not_configured');
+  const k = creatorKey(); if (k) opt = { ...(opt || {}), headers: { ...((opt && opt.headers) || {}), 'x-creator-key': k } };
   let r; try { r = await fetch(CFG.servidorIA.replace(/\/$/, '') + path, opt); } catch (e) { throw err('network'); }
   const j = await r.json().catch(() => ({})); if (!r.ok) throw Object.assign(err(j.error || 'server'), { data: j }); return j;
 };
@@ -75,5 +81,5 @@ window.FC = {
     try { await Share.share({ title: name, text: 'Creado con FaraCut', files: [uri], dialogTitle: 'Guardar o compartir el vídeo' }); }
     catch (e) { if (!/cancel/i.test(String(e && e.message))) throw e; }
   },
-  offerings, plan, buy, restore, manage, balance, run, job, report, download, saveLocal, shareLocal, removeClip,
+  offerings, plan, buy, restore, manage, setCreator, isCreator: () => !!creatorKey(), balance, run, job, report, download, saveLocal, shareLocal, removeClip,
 };
