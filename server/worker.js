@@ -134,7 +134,11 @@ export default {
       const act = +(await env.DATA.get('act:' + b.user)) || 0; if (act >= (creator ? 10 : MAX_ACTIVE)) return json({ error: 'busy' }, 429);
       await addUsage(env, b.user, job.cost);   // se reserva antes y se devuelve si falla
       const r = await fetch('https://queue.fal.run/' + job.model, { method: 'POST', headers: { authorization: 'Key ' + env.FAL_KEY, 'content-type': 'application/json' }, body: JSON.stringify(job.input) });
-      if (!r.ok) { await addUsage(env, b.user, -job.cost); console.log('fal submit', job.model, r.status, await r.text()); return json({ error: 'server' }, 502); }
+      if (!r.ok) {
+        await addUsage(env, b.user, -job.cost); const t = await r.text(); console.log('fal submit', job.model, r.status, t);
+        if (r.status === 402 || r.status === 403 || /balance|credit|billing|locked/i.test(t)) return json({ error: 'no_funds' }, 402);
+        return json({ error: 'server' }, 502);
+      }
       const q = await r.json();
       if (b.kind === 'clone') await env.DATA.put(`consent:${b.user}:${q.request_id}`, new Date().toISOString(), { expirationTtl: 60 * 60 * 24 * 365 * 3 });
       await env.DATA.put('job:' + q.request_id, JSON.stringify({ user: b.user, kind: b.kind, cost: job.cost, status_url: q.status_url, response_url: q.response_url, at: Date.now() }), { expirationTtl: 60 * 60 * 24 });
