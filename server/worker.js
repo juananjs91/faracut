@@ -6,7 +6,7 @@
 // 1 crédito ≈ 0,10 $ de coste como máximo: 1 s de vídeo, 1 imagen, 500 caracteres de voz,
 // 15 s de cambio de voz. Clonar una voz: 20 créditos.
 //
-// Secretos (en Cloudflare): FAL_KEY, REVENUECAT_SECRET
+// Secretos (en Cloudflare): FAL_KEY, REVENUECAT_SECRET (opcional), CREATOR_KEY (opcional: modo creador sin límites)
 // Variables (wrangler.toml): PLANS (permiso → créditos al mes), MODEL_VIDEO, MODEL_VIDEO_TEXT, MODEL_IMAGE
 // Almacén KV: DATA
 
@@ -24,14 +24,24 @@ const STYLES = {
 };
 const VOICES = ['Aria', 'Sarah', 'Laura', 'Charlotte', 'Alice', 'Matilda', 'Jessica', 'Lily', 'Roger', 'Charlie', 'George', 'Callum', 'Liam', 'Will', 'Eric', 'Chris', 'Brian', 'Daniel', 'Bill'];
 
-const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type' } });
+const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type, x-creator-key' } });
 const month = () => new Date().toISOString().slice(0, 7);
 const okId = id => typeof id === 'string' && /^[a-zA-Z0-9-]{8,64}$/.test(id);
 const plans = env => { try { return JSON.parse(env.PLANS || ''); } catch (e) { return DEFAULT_PLANS; } };
 const unsafe = t => { const s = ' ' + String(t).toLowerCase() + ' '; return BLOCK.some(w => s.includes(w)); };
 const dataUri = (v, kind, max) => typeof v === 'string' && new RegExp('^data:' + kind + '/[a-z0-9.+-]+;base64,').test(v) && v.length <= max;
 
+// Modo creador: quien envía la clave CREATOR_KEY usa la IA sin plan ni límite de créditos.
+const CREATOR = { name: 'creadora', credits: 999999 };
+function isCreator(env, req) {
+  const k = env.CREATOR_KEY, g = req.headers.get('x-creator-key') || '';
+  if (!k || k.length < 8 || g.length !== k.length) return false;
+  let d = 0; for (let i = 0; i < k.length; i++) d |= k.charCodeAt(i) ^ g.charCodeAt(i);
+  return d === 0;
+}
+
 async function planOf(env, id) {
+  if (!env.REVENUECAT_SECRET) return null;
   const ck = 'plan:' + id, c = await env.DATA.get(ck);
   if (c !== null) return c ? JSON.parse(c) : null;
   let best = null;
@@ -104,10 +114,12 @@ export default {
     const url = new URL(req.url), path = url.pathname;
     if (req.method === 'OPTIONS') return json({});
     if (path === '/') return json({ ok: true, app: 'FaraCut' });
-    if (!env.FAL_KEY || !env.REVENUECAT_SECRET) return json({ error: 'not_configured' }, 503);
+    if (!env.FAL_KEY) return json({ error: 'not_configured' }, 503);
+    const creator = isCreator(env, req);
 
     if (path === '/balance' && req.method === 'GET') {
       const id = url.searchParams.get('user'); if (!okId(id)) return json({ error: 'bad_request' }, 400);
+      if (creator) return json({ plan: CREATOR.name, allowance: CREATOR.credits, used: await usage(env, id), remaining: CREATOR.credits });
       return json(await balance(env, id));
     }
 
@@ -115,9 +127,11 @@ export default {
       const b = await req.json().catch(() => null);
       if (!b || !okId(b.user)) return json({ error: 'bad_request' }, 400);
       const job = build(env, b); if (job.error) return json({ error: job.error }, 400);
-      const p = await planOf(env, b.user); if (!p) return json({ error: 'no_plan' }, 402);
-      const used = await usage(env, b.user); if (used + job.cost > p.credits) return json({ error: 'no_credits', cost: job.cost, ...(await balance(env, b.user)) }, 402);
-      const act = +(await env.DATA.get('act:' + b.user)) || 0; if (act >= MAX_ACTIVE) return json({ error: 'busy' }, 429);
+      if (!creator) {
+        const p = await planOf(env, b.user); if (!p) return json({ error: 'no_plan' }, 402);
+        const used = await usage(env, b.user); if (used + job.cost > p.credits) return json({ error: 'no_credits', cost: job.cost, ...(await balance(env, b.user)) }, 402);
+      }
+      const act = +(await env.DATA.get('act:' + b.user)) || 0; if (act >= (creator ? 10 : MAX_ACTIVE)) return json({ error: 'busy' }, 429);
       await addUsage(env, b.user, job.cost);   // se reserva antes y se devuelve si falla
       const r = await fetch('https://queue.fal.run/' + job.model, { method: 'POST', headers: { authorization: 'Key ' + env.FAL_KEY, 'content-type': 'application/json' }, body: JSON.stringify(job.input) });
       if (!r.ok) { await addUsage(env, b.user, -job.cost); console.log('fal submit', job.model, r.status, await r.text()); return json({ error: 'server' }, 502); }
@@ -125,7 +139,8 @@ export default {
       if (b.kind === 'clone') await env.DATA.put(`consent:${b.user}:${q.request_id}`, new Date().toISOString(), { expirationTtl: 60 * 60 * 24 * 365 * 3 });
       await env.DATA.put('job:' + q.request_id, JSON.stringify({ user: b.user, kind: b.kind, cost: job.cost, status_url: q.status_url, response_url: q.response_url, at: Date.now() }), { expirationTtl: 60 * 60 * 24 });
       await env.DATA.put('act:' + b.user, String(act + 1), { expirationTtl: 60 * 20 });
-      return json({ job: q.request_id, cost: job.cost, ...(await balance(env, b.user)) });
+      const bal = creator ? { plan: CREATOR.name, allowance: CREATOR.credits, used: await usage(env, b.user), remaining: CREATOR.credits } : await balance(env, b.user);
+      return json({ job: q.request_id, cost: job.cost, ...bal });
     }
 
     if (path.startsWith('/job/') && req.method === 'GET') {
